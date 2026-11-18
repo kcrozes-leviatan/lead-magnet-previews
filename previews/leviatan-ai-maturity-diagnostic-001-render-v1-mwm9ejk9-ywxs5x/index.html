@@ -1,0 +1,1753 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+  <meta
+    name="robots"
+    content="noindex,nofollow,noarchive"
+  >
+  <meta name="color-scheme" content="light">
+
+  <title>Votre projet d’IA est-il prêt à être industrialisé ? — Preview</title>
+
+  <style>
+    :root {
+      --page: #FFFFFF;
+      --surface: #FFFFFF;
+      --alternative: #F3F5F7;
+      --text: #151922;
+      --muted: #495463;
+      --primary: #191B20;
+      --contrast: #FFFFFF;
+      --secondary: #E5E5E5;
+      --accent: #36516D;
+      --border: #7A838F;
+      --focus: #0064CA;
+      --danger: #A42622;
+      --heading-font: "Arial Narrow", "Liberation Sans Narrow", Arial, sans-serif;
+      --body-font: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      --heading-weight: 600;
+      --body-weight: 400;
+      --base-size: 17px;
+      --border-width: 1px;
+      --radius: 2px;
+      --button-radius: 0px;
+      --page-padding: 24px;
+      --card-padding: 24px;
+      --max-width: 1200px;
+      --question-width: 680px;
+      --transition: 140ms;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--page);
+      color: var(--text);
+      font-family: var(--body-font);
+      font-size: var(--base-size);
+      font-weight: var(--body-weight);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+      font-family: var(--heading-font);
+      font-weight: var(--heading-weight);
+      line-height: 1.18;
+    }
+
+    h1 {
+      max-width: 14ch;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+    }
+
+    h2 {
+      font-size: clamp(1.75rem, 4vw, 2.7rem);
+    }
+
+    h3 {
+      font-size: 1.35rem;
+    }
+
+    .site-header,
+    main,
+    .site-footer {
+      width: min(
+        calc(100% - (var(--page-padding) * 2)),
+        var(--max-width)
+      );
+      margin: 0 auto;
+    }
+
+    .site-header {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .header-bordered .site-header {
+      border-bottom:
+        var(--border-width)
+        solid
+        var(--border);
+    }
+
+    .header-floating .site-header {
+      min-height: 68px;
+      margin-top: 14px;
+      padding: 0 22px;
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow:
+        0 12px 36px
+        rgba(20, 24, 32, 0.08);
+    }
+
+    .wordmark {
+      font-family: var(--heading-font);
+      font-weight: var(--heading-weight);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .preview-badge,
+    .eyebrow,
+    .progress-meta,
+    .question-kicker,
+    .result-score {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .preview-badge {
+      padding: 6px 10px;
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+      background: var(--alternative);
+      color: var(--muted);
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+      animation:
+        reveal
+        var(--transition)
+        ease
+        both;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      min-height: calc(100vh - 120px);
+      padding:
+        clamp(52px, 8vw, 112px)
+        0;
+      display: grid;
+      grid-template-columns:
+        minmax(0, 1.05fr)
+        minmax(300px, 0.95fr);
+      align-items: center;
+      gap: clamp(36px, 7vw, 90px);
+    }
+
+    .hero-left .hero,
+    .hero-center .hero {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-center .hero-copy {
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero-center h1 {
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .eyebrow,
+    .question-kicker {
+      margin: 0 0 16px;
+      color: var(--accent);
+    }
+
+    .hero-description {
+      max-width: 62ch;
+      margin: 0 0 30px;
+      color: var(--muted);
+      font-size:
+        clamp(1rem, 2vw, 1.2rem);
+    }
+
+    .hero-meta {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 20px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 440px;
+      overflow: hidden;
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+      background-color: var(--primary);
+      color: var(--contrast);
+    }
+
+    .visual-none .hero-visual {
+      display: none;
+    }
+
+    .visual-none .hero {
+      grid-template-columns: 1fr;
+    }
+
+    .visual-data_grid .hero-visual {
+      background-image:
+        linear-gradient(
+          rgba(255,255,255,.12) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.12) 1px,
+          transparent 1px
+        ),
+        radial-gradient(
+          circle at 72% 28%,
+          var(--accent) 0 5px,
+          transparent 6px
+        ),
+        radial-gradient(
+          circle at 30% 68%,
+          var(--accent) 0 5px,
+          transparent 6px
+        );
+
+      background-size:
+        42px 42px,
+        42px 42px,
+        100% 100%,
+        100% 100%;
+    }
+
+    .visual-gradient .hero-visual {
+      background:
+        linear-gradient(
+          145deg,
+          var(--primary),
+          var(--accent)
+        );
+    }
+
+    .visual-geometric .hero-visual,
+    .visual-abstract_network .hero-visual {
+      background:
+        linear-gradient(
+          135deg,
+          transparent 0 48%,
+          rgba(255,255,255,.15) 48% 50%,
+          transparent 50%
+        ),
+        linear-gradient(
+          45deg,
+          var(--primary),
+          var(--accent)
+        );
+    }
+
+    .visual-editorial .hero-visual {
+      background: var(--alternative);
+      color: var(--text);
+    }
+
+    .visual-label {
+      position: absolute;
+      right: 26px;
+      bottom: 24px;
+      left: 26px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .visual-index {
+      font-family: var(--heading-font);
+      font-size:
+        clamp(4rem, 11vw, 8rem);
+      line-height: 0.8;
+    }
+
+    .button {
+      min-height: 48px;
+      padding: 13px 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border:
+        var(--border-width)
+        solid
+        var(--primary);
+      border-radius: var(--button-radius);
+      background: var(--primary);
+      color: var(--contrast);
+      font-weight: 700;
+      text-decoration: none;
+      transition:
+        transform var(--transition),
+        background var(--transition),
+        color var(--transition);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button.secondary {
+      border-color: var(--border);
+      background: transparent;
+      color: var(--text);
+    }
+
+    .button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+      transform: none;
+    }
+
+    .question-shell,
+    .capture-shell,
+    .result-shell {
+      width:
+        min(100%, var(--question-width));
+      min-height:
+        calc(100vh - 150px);
+      margin: 0 auto;
+      padding:
+        clamp(42px, 8vw, 88px)
+        0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .progress-wrap {
+      margin-bottom: 32px;
+    }
+
+    .progress-meta {
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+    }
+
+    .progress-track {
+      height: 5px;
+      overflow: hidden;
+      background: var(--secondary);
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: var(--accent);
+      transition:
+        width var(--transition);
+    }
+
+    .progress-segments {
+      display: none;
+      gap: 7px;
+    }
+
+    .progress-segment {
+      height: 5px;
+      flex: 1;
+      background: var(--secondary);
+    }
+
+    .progress-segment.active {
+      background: var(--accent);
+    }
+
+    .progress-segment.completed {
+      background: var(--primary);
+    }
+
+    .progress-segmented .progress-track {
+      display: none;
+    }
+
+    .progress-segmented .progress-segments {
+      display: flex;
+    }
+
+    .progress-minimal .progress-track,
+    .progress-minimal .progress-segments {
+      display: none;
+    }
+
+    .card {
+      padding: var(--card-padding);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .question-bordered .question-card {
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+    }
+
+    .question-elevated .question-card {
+      box-shadow:
+        0 18px 55px
+        rgba(20, 24, 32, 0.11);
+    }
+
+    .question-glass .question-card {
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+      background:
+        rgba(255,255,255,.88);
+      box-shadow:
+        0 18px 55px
+        rgba(20, 24, 32, 0.09);
+      backdrop-filter: blur(12px);
+    }
+
+    .question-help {
+      margin: -4px 0 24px;
+      color: var(--muted);
+    }
+
+    .options {
+      margin-top: 24px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .option-label {
+      min-height: 54px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      transition:
+        border-color var(--transition),
+        background var(--transition),
+        transform var(--transition);
+    }
+
+    .option-label:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .option-label.selected {
+      border-color: var(--accent);
+      background: var(--alternative);
+    }
+
+    .option-label input {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 auto;
+      accent-color: var(--accent);
+    }
+
+    .option-compact_button .options {
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    }
+
+    .validation {
+      min-height: 24px;
+      margin: 16px 0 0;
+      color: var(--danger);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .navigation,
+    .result-actions {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .capture-header,
+    .result-header {
+      margin-bottom: 24px;
+    }
+
+    .form-fields {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+    }
+
+    .field input {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 14px;
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .privacy-note {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .result-card {
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+    }
+
+    .result-score {
+      margin-bottom: 18px;
+      padding: 7px 10px;
+      display: inline-flex;
+      background: var(--alternative);
+      color: var(--muted);
+    }
+
+    .result-summary {
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .cta-panel {
+      margin-top: 28px;
+      padding: var(--card-padding);
+      border:
+        var(--border-width)
+        solid
+        var(--primary);
+      border-radius: var(--radius);
+      background: var(--primary);
+      color: var(--contrast);
+    }
+
+    .cta-bordered_panel .cta-panel {
+      border-color: var(--border);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .cta-minimal .cta-panel {
+      padding-right: 0;
+      padding-left: 0;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .cta-panel p {
+      opacity: 0.84;
+    }
+
+    .result-actions {
+      justify-content: flex-start;
+    }
+
+    .site-footer {
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-top:
+        var(--border-width)
+        solid
+        var(--border);
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      z-index: 100;
+      max-width: min(90vw, 520px);
+      padding: 13px 18px;
+      background: var(--primary);
+      color: var(--contrast);
+      opacity: 0;
+      transform:
+        translate(-50%, 150%);
+      transition:
+        transform var(--transition),
+        opacity var(--transition);
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform:
+        translate(-50%, 0);
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        min-height: auto;
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        min-height: 310px;
+      }
+
+      .option-compact_button .options {
+        grid-template-columns: 1fr;
+      }
+
+      .navigation {
+        flex-direction: column-reverse;
+      }
+
+      .navigation .button {
+        width: 100%;
+      }
+
+      .site-footer {
+        padding: 22px 0;
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="header-bordered progress-segmented question-bordered option-selectable_card cta-bordered_panel hero-split visual-data_grid">
+  <header class="site-header">
+    <div class="wordmark">
+      LEVIATAN
+    </div>
+
+    <div class="preview-badge">
+      Preview interactive
+    </div>
+  </header>
+
+  <main>
+    <section
+      id="landing-screen"
+      class="screen active"
+    >
+      <div class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            Diagnostic IA
+          </p>
+
+          <h1>
+            Votre projet d’IA est-il prêt à passer du prototype à la production ?
+          </h1>
+
+          <p class="hero-description">
+            Répondez à quelques questions pour obtenir une évaluation personnalisée de votre maturité technique.
+          </p>
+
+          <button
+            id="start-button"
+            class="button"
+            type="button"
+          >
+            Commencer le diagnostic
+
+            <span aria-hidden="true">→</span>
+          </button>
+
+          <div class="hero-meta">
+            <span>
+              4 questions
+            </span>
+
+            <span>
+              ≈ 5 minutes
+            </span>
+
+            <span>
+              Résultat personnalisé
+            </span>
+          </div>
+        </div>
+
+        <div
+          class="hero-visual"
+          aria-hidden="true"
+        >
+          <div class="visual-label">
+            <span>
+              Diagnostic /
+              1
+            </span>
+
+            <span class="visual-index">
+              01
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="question-screen"
+      class="screen"
+    >
+      <div class="question-shell">
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span id="progress-label">
+              Question 1
+            </span>
+
+            <span id="progress-percent">
+              0 %
+            </span>
+          </div>
+
+          <div
+            class="progress-track"
+            aria-hidden="true"
+          >
+            <div
+              id="progress-fill"
+              class="progress-fill"
+            ></div>
+          </div>
+
+          <div
+            id="progress-segments"
+            class="progress-segments"
+            aria-hidden="true"
+          ></div>
+        </div>
+
+        <article class="card question-card">
+          <p
+            id="question-kicker"
+            class="question-kicker"
+          ></p>
+
+          <h2 id="question-title"></h2>
+
+          <p
+            id="question-help"
+            class="question-help"
+          ></p>
+
+          <div
+            id="options"
+            class="options"
+          ></div>
+
+          <p
+            id="validation"
+            class="validation"
+            role="alert"
+            aria-live="polite"
+          ></p>
+        </article>
+
+        <div class="navigation">
+          <button
+            id="previous-button"
+            class="button secondary"
+            type="button"
+          >
+            ← Précédent
+          </button>
+
+          <button
+            id="next-button"
+            class="button"
+            type="button"
+          >
+            Continuer →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="capture-screen"
+      class="screen"
+    >
+      <div class="capture-shell">
+        <div class="capture-header">
+          <p class="eyebrow">
+            Votre résultat est prêt
+          </p>
+
+          <h2 id="capture-title"></h2>
+
+          <p
+            id="capture-description"
+            class="hero-description"
+          ></p>
+        </div>
+
+        <form
+          id="lead-form"
+          class="card question-card"
+          novalidate
+        >
+          <div
+            id="form-fields"
+            class="form-fields"
+          ></div>
+
+          <p class="privacy-note">
+            Preview : aucune donnée saisie
+            n’est enregistrée ou envoyée.
+          </p>
+
+          <div class="navigation">
+            <button
+              id="capture-back-button"
+              class="button secondary"
+              type="button"
+            >
+              ← Retour
+            </button>
+
+            <button
+              id="capture-submit-button"
+              class="button"
+              type="submit"
+            ></button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section
+      id="result-screen"
+      class="screen"
+    >
+      <div class="result-shell">
+        <div class="result-header">
+          <p class="eyebrow">
+            Votre diagnostic
+          </p>
+
+          <h2>
+            Résultat personnalisé
+          </h2>
+        </div>
+
+        <article class="card result-card">
+          <div
+            id="result-score"
+            class="result-score"
+          ></div>
+
+          <h3 id="profile-title"></h3>
+
+          <p
+            id="profile-summary"
+            class="result-summary"
+          ></p>
+        </article>
+
+        <aside class="cta-panel">
+          <h3 id="cta-title"></h3>
+
+          <p id="cta-description"></p>
+
+          <div class="result-actions">
+            <button
+              id="cta-button"
+              class="button"
+              type="button"
+            ></button>
+
+            <button
+              id="restart-button"
+              class="button secondary"
+              type="button"
+            >
+              Recommencer
+            </button>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>LEVIATAN</span>
+
+    <span>
+      Preview de démonstration —
+      aucune donnée collectée
+    </span>
+  </footer>
+
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+  <script>
+    "use strict";
+
+    const SPECIFICATION =
+      {"schema_version":1,"lead_magnet_id":"leviatan_ai_maturity_diagnostic_001","idea_id":"idea_1","format":"diagnostic","engine":"questionnaire","title":"Votre projet d’IA est-il prêt à être industrialisé ?","subtitle":"Évaluez en moins de 5 minutes la maturité technique de votre projet et identifiez vos priorités.","estimated_completion_minutes":5,"landing_page":{"eyebrow":"Diagnostic IA","headline":"Votre projet d’IA est-il prêt à passer du prototype à la production ?","description":"Répondez à quelques questions pour obtenir une évaluation personnalisée de votre maturité technique.","start_button_label":"Commencer le diagnostic"},"questions":[{"question_id":"q1","type":"single_choice","title":"À quel stade se trouve actuellement votre projet ?","required":true,"options":[{"option_id":"q1_a","label":"Idée ou exploration","score":1},{"option_id":"q1_b","label":"Preuve de concept","score":2},{"option_id":"q1_c","label":"Prototype testé","score":3},{"option_id":"q1_d","label":"Solution déjà utilisée","score":4}]},{"question_id":"q2","type":"single_choice","title":"Vos données sont-elles suffisamment structurées et accessibles ?","required":true,"options":[{"option_id":"q2_a","label":"Pas encore","score":1},{"option_id":"q2_b","label":"Partiellement","score":2},{"option_id":"q2_c","label":"Majoritairement","score":3},{"option_id":"q2_d","label":"Oui, avec une gouvernance définie","score":4}]},{"question_id":"q3","type":"multiple_choice","title":"Quels sont vos principaux obstacles ?","required":true,"options":[{"option_id":"q3_a","label":"Qualité ou accès aux données"},{"option_id":"q3_b","label":"Fiabilité des réponses"},{"option_id":"q3_c","label":"Sécurité et confidentialité"},{"option_id":"q3_d","label":"Intégration au système existant"},{"option_id":"q3_e","label":"Coûts ou performance"}]},{"question_id":"q4","type":"single_choice","title":"Disposez-vous d’indicateurs pour mesurer la qualité du système ?","required":true,"options":[{"option_id":"q4_a","label":"Aucun indicateur","score":1},{"option_id":"q4_b","label":"Quelques tests manuels","score":2},{"option_id":"q4_c","label":"Des métriques régulières","score":3},{"option_id":"q4_d","label":"Une évaluation automatisée complète","score":4}]}],"lead_capture":{"position":"before_full_result","headline":"Recevez votre diagnostic complet","description":"Indiquez vos coordonnées pour découvrir votre niveau de maturité et vos priorités.","fields":[{"field_id":"first_name","type":"text","label":"Prénom","required":true},{"field_id":"email","type":"email","label":"Email professionnel","required":true},{"field_id":"company","type":"text","label":"Entreprise","required":true}],"submit_label":"Afficher mon diagnostic"},"result_profiles":[{"profile_id":"exploration","title":"Projet en phase d’exploration","min_score":0,"max_score":4,"summary":"Votre projet nécessite encore une phase de cadrage avant son industrialisation."},{"profile_id":"prototype","title":"Prototype à consolider","min_score":5,"max_score":8,"summary":"Les fondations existent, mais plusieurs éléments doivent être fiabilisés avant le passage en production."},{"profile_id":"ready","title":"Projet proche de l’industrialisation","min_score":9,"max_score":16,"summary":"Votre projet dispose de bases solides pour préparer son industrialisation."}],"cta":{"headline":"Validez les prochaines étapes de votre projet","description":"Échangez avec un expert Leviatan pour approfondir les priorités identifiées.","label":"Prendre rendez-vous","url":""}};
+
+    const QUESTIONS =
+      Array.isArray(SPECIFICATION.questions)
+        ? SPECIFICATION.questions
+        : [];
+
+    const PROFILES =
+      Array.isArray(
+        SPECIFICATION.result_profiles
+      )
+        ? SPECIFICATION.result_profiles
+        : [];
+
+    const answers = {};
+    let currentQuestionIndex = 0;
+
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function showScreen(id) {
+      document
+        .querySelectorAll(".screen")
+        .forEach(function(screen) {
+          screen.classList.toggle(
+            "active",
+            screen.id === id
+          );
+        });
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    function showToast(message) {
+      const toast = byId("toast");
+
+      toast.textContent = message;
+      toast.classList.add("visible");
+
+      window.setTimeout(function() {
+        toast.classList.remove("visible");
+      }, 3200);
+    }
+
+    function updateProgress() {
+      const total =
+        Math.max(QUESTIONS.length, 1);
+
+      const current =
+        currentQuestionIndex + 1;
+
+      const percent =
+        Math.round(
+          (current / total) * 100
+        );
+
+      byId("progress-label").textContent =
+        "Question " +
+        current +
+        " sur " +
+        total;
+
+      byId("progress-percent").textContent =
+        percent + " %";
+
+      byId("progress-fill").style.width =
+        percent + "%";
+
+      const segments =
+        byId("progress-segments");
+
+      segments.replaceChildren();
+
+      QUESTIONS.forEach(function(_, index) {
+        const segment =
+          document.createElement("span");
+
+        segment.className =
+          "progress-segment";
+
+        if (index < currentQuestionIndex) {
+          segment.classList.add(
+            "completed"
+          );
+        }
+
+        if (index === currentQuestionIndex) {
+          segment.classList.add(
+            "active"
+          );
+        }
+
+        segments.appendChild(segment);
+      });
+    }
+
+    function currentQuestion() {
+      return QUESTIONS[
+        currentQuestionIndex
+      ];
+    }
+
+    function renderQuestion() {
+      const question =
+        currentQuestion();
+
+      if (!question) return;
+
+      updateProgress();
+
+      byId("question-kicker").textContent =
+        question.type ===
+        "multiple_choice"
+          ? "Sélection multiple"
+          : "Sélection unique";
+
+      byId("question-title").textContent =
+        question.title ||
+        "Question";
+
+      byId("question-help").textContent =
+        question.type ===
+        "multiple_choice"
+          ? "Vous pouvez sélectionner plusieurs réponses."
+          : "Sélectionnez la réponse la plus proche de votre situation.";
+
+      byId("validation").textContent = "";
+
+      byId("previous-button").disabled =
+        currentQuestionIndex === 0;
+
+      byId("next-button").textContent =
+        currentQuestionIndex ===
+        QUESTIONS.length - 1
+          ? "Voir la suite →"
+          : "Continuer →";
+
+      const container =
+        byId("options");
+
+      container.replaceChildren();
+
+      const options =
+        Array.isArray(question.options)
+          ? question.options
+          : [];
+
+      const existingAnswer =
+        answers[question.question_id];
+
+      options.forEach(
+        function(option, index) {
+          const optionId =
+            option.option_id ||
+            String(index);
+
+          const label =
+            document.createElement(
+              "label"
+            );
+
+          label.className =
+            "option-label";
+
+          const optionInput =
+            document.createElement(
+              "input"
+            );
+
+          optionInput.type =
+            question.type ===
+            "multiple_choice"
+              ? "checkbox"
+              : "radio";
+
+          optionInput.name =
+            "question-" +
+            question.question_id;
+
+          optionInput.value =
+            optionId;
+
+          optionInput.checked =
+            question.type ===
+            "multiple_choice"
+              ? Array.isArray(
+                  existingAnswer
+                ) &&
+                existingAnswer.includes(
+                  optionId
+                )
+              : existingAnswer ===
+                optionId;
+
+          label.classList.toggle(
+            "selected",
+            optionInput.checked
+          );
+
+          const labelText =
+            document.createElement(
+              "span"
+            );
+
+          labelText.textContent =
+            option.label ||
+            "Réponse";
+
+          optionInput.addEventListener(
+            "change",
+            function() {
+              if (
+                question.type ===
+                "multiple_choice"
+              ) {
+                answers[
+                  question.question_id
+                ] = Array.from(
+                  container
+                    .querySelectorAll(
+                      "input:checked"
+                    )
+                ).map(function(item) {
+                  return item.value;
+                });
+              } else {
+                answers[
+                  question.question_id
+                ] = optionInput.value;
+              }
+
+              container
+                .querySelectorAll(
+                  ".option-label"
+                )
+                .forEach(
+                  function(currentLabel) {
+                    const currentInput =
+                      currentLabel
+                        .querySelector(
+                          "input"
+                        );
+
+                    currentLabel
+                      .classList
+                      .toggle(
+                        "selected",
+                        Boolean(
+                          currentInput &&
+                          currentInput.checked
+                        )
+                      );
+                  }
+                );
+
+              byId(
+                "validation"
+              ).textContent = "";
+            }
+          );
+
+          label.appendChild(
+            optionInput
+          );
+
+          label.appendChild(
+            labelText
+          );
+
+          container.appendChild(
+            label
+          );
+        }
+      );
+    }
+
+    function answerIsValid() {
+      const question =
+        currentQuestion();
+
+      if (
+        !question ||
+        !question.required
+      ) {
+        return true;
+      }
+
+      const answer =
+        answers[
+          question.question_id
+        ];
+
+      if (Array.isArray(answer)) {
+        return answer.length > 0;
+      }
+
+      return Boolean(answer);
+    }
+
+    function renderCapture() {
+      const capture =
+        SPECIFICATION.lead_capture ||
+        {};
+
+      byId("capture-title").textContent =
+        capture.headline ||
+        "Recevez votre résultat complet";
+
+      byId(
+        "capture-description"
+      ).textContent =
+        capture.description ||
+        "Complétez ces informations pour afficher votre résultat.";
+
+      byId(
+        "capture-submit-button"
+      ).textContent =
+        capture.submit_label ||
+        "Afficher mon résultat";
+
+      const container =
+        byId("form-fields");
+
+      container.replaceChildren();
+
+      const fields =
+        Array.isArray(
+          capture.fields
+        )
+          ? capture.fields
+          : [];
+
+      fields.forEach(
+        function(field, index) {
+          const wrapper =
+            document.createElement(
+              "div"
+            );
+
+          wrapper.className =
+            "field";
+
+          const label =
+            document.createElement(
+              "label"
+            );
+
+          const fieldId =
+            "lead-field-" +
+            (
+              field.field_id ||
+              index
+            );
+
+          label.setAttribute(
+            "for",
+            fieldId
+          );
+
+          label.textContent =
+            field.label ||
+            "Information";
+
+          const fieldInput =
+            document.createElement(
+              "input"
+            );
+
+          fieldInput.id =
+            fieldId;
+
+          fieldInput.name =
+            field.field_id ||
+            "field_" + index;
+
+          fieldInput.type =
+            field.type === "email"
+              ? "email"
+              : "text";
+
+          fieldInput.required =
+            Boolean(
+              field.required
+            );
+
+          fieldInput.autocomplete =
+            field.type === "email"
+              ? "email"
+              : "off";
+
+          wrapper.appendChild(
+            label
+          );
+
+          wrapper.appendChild(
+            fieldInput
+          );
+
+          container.appendChild(
+            wrapper
+          );
+        }
+      );
+    }
+
+    function calculateScore() {
+      return QUESTIONS.reduce(
+        function(total, question) {
+          const selected =
+            answers[
+              question.question_id
+            ];
+
+          const selectedIds =
+            Array.isArray(selected)
+              ? selected
+              : [selected];
+
+          const options =
+            Array.isArray(
+              question.options
+            )
+              ? question.options
+              : [];
+
+          return total +
+            options.reduce(
+              function(
+                questionTotal,
+                option,
+                index
+              ) {
+                const optionId =
+                  option.option_id ||
+                  String(index);
+
+                if (
+                  !selectedIds
+                    .includes(optionId)
+                ) {
+                  return questionTotal;
+                }
+
+                const score =
+                  Number(
+                    option.score
+                  );
+
+                return questionTotal +
+                  (
+                    Number.isFinite(
+                      score
+                    )
+                      ? score
+                      : 0
+                  );
+              },
+              0
+            );
+        },
+        0
+      );
+    }
+
+    function getProfile(score) {
+      const profile =
+        PROFILES.find(
+          function(
+            currentProfile
+          ) {
+            const minimum =
+              Number(
+                currentProfile
+                  .min_score
+              );
+
+            const maximum =
+              Number(
+                currentProfile
+                  .max_score
+              );
+
+            return (
+              Number.isFinite(
+                minimum
+              ) &&
+              Number.isFinite(
+                maximum
+              ) &&
+              score >= minimum &&
+              score <= maximum
+            );
+          }
+        );
+
+      if (profile) {
+        return profile;
+      }
+
+      if (PROFILES.length > 0) {
+        return PROFILES[
+          PROFILES.length - 1
+        ];
+      }
+
+      return {
+        title:
+          "Diagnostic terminé",
+        summary:
+          "Votre résultat est prêt à être analysé."
+      };
+    }
+
+    function renderResult() {
+      const score =
+        calculateScore();
+
+      const profile =
+        getProfile(score);
+
+      const action =
+        SPECIFICATION.cta ||
+        {};
+
+      byId(
+        "result-score"
+      ).textContent =
+        "Score de maturité : " +
+        score;
+
+      byId(
+        "profile-title"
+      ).textContent =
+        profile.title ||
+        "Votre profil";
+
+      byId(
+        "profile-summary"
+      ).textContent =
+        profile.summary ||
+        "Votre diagnostic est terminé.";
+
+      byId(
+        "cta-title"
+      ).textContent =
+        action.headline ||
+        "Passez à l’étape suivante";
+
+      byId(
+        "cta-description"
+      ).textContent =
+        action.description ||
+        "Approfondissez votre résultat avec un expert.";
+
+      byId(
+        "cta-button"
+      ).textContent =
+        action.label ||
+        "Continuer";
+    }
+
+    byId(
+      "start-button"
+    ).addEventListener(
+      "click",
+      function() {
+        currentQuestionIndex = 0;
+        renderQuestion();
+        showScreen(
+          "question-screen"
+        );
+      }
+    );
+
+    byId(
+      "previous-button"
+    ).addEventListener(
+      "click",
+      function() {
+        if (
+          currentQuestionIndex <= 0
+        ) {
+          return;
+        }
+
+        currentQuestionIndex -= 1;
+        renderQuestion();
+      }
+    );
+
+    byId(
+      "next-button"
+    ).addEventListener(
+      "click",
+      function() {
+        if (!answerIsValid()) {
+          byId(
+            "validation"
+          ).textContent =
+            "Sélectionnez au moins une réponse pour continuer.";
+
+          return;
+        }
+
+        if (
+          currentQuestionIndex <
+          QUESTIONS.length - 1
+        ) {
+          currentQuestionIndex += 1;
+          renderQuestion();
+          return;
+        }
+
+        const captureFields =
+          Array.isArray(
+            SPECIFICATION
+              .lead_capture
+              ?.fields
+          )
+            ? SPECIFICATION
+                .lead_capture
+                .fields
+            : [];
+
+        if (
+          captureFields.length > 0
+        ) {
+          renderCapture();
+
+          showScreen(
+            "capture-screen"
+          );
+        } else {
+          renderResult();
+
+          showScreen(
+            "result-screen"
+          );
+        }
+      }
+    );
+
+    byId(
+      "capture-back-button"
+    ).addEventListener(
+      "click",
+      function() {
+        currentQuestionIndex =
+          Math.max(
+            QUESTIONS.length - 1,
+            0
+          );
+
+        renderQuestion();
+
+        showScreen(
+          "question-screen"
+        );
+      }
+    );
+
+    byId(
+      "lead-form"
+    ).addEventListener(
+      "submit",
+      function(event) {
+        event.preventDefault();
+
+        if (
+          !event.currentTarget
+            .checkValidity()
+        ) {
+          event.currentTarget
+            .reportValidity();
+
+          return;
+        }
+
+        renderResult();
+
+        showScreen(
+          "result-screen"
+        );
+      }
+    );
+
+    byId(
+      "cta-button"
+    ).addEventListener(
+      "click",
+      function() {
+        const url = String(
+          SPECIFICATION.cta
+            ?.url || ""
+        ).trim();
+
+        if (
+          /^https?:\/\//i
+            .test(url)
+        ) {
+          window.open(
+            url,
+            "_blank",
+            "noopener,noreferrer"
+          );
+
+          return;
+        }
+
+        showToast(
+          "Le lien du CTA sera configuré avant la publication."
+        );
+      }
+    );
+
+    byId(
+      "restart-button"
+    ).addEventListener(
+      "click",
+      function() {
+        Object.keys(
+          answers
+        ).forEach(
+          function(key) {
+            delete answers[key];
+          }
+        );
+
+        currentQuestionIndex = 0;
+
+        byId(
+          "lead-form"
+        ).reset();
+
+        showScreen(
+          "landing-screen"
+        );
+      }
+    );
+  </script>
+</body>
+</html>
