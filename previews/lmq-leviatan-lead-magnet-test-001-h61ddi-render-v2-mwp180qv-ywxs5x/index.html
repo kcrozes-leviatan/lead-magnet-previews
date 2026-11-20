@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#191B20">
+<title>Leviatan — Diagnostic de maturité IA générative</title>
+<style>
+:root{--ink:#151922;--muted:#4B5563;--paper:#fff;--soft:#F2F5F7;--line:#777E88;--light-line:#D5DADE;--accent:#275978;--focus:#2878C4;--dark:#191B20;--danger:#A62620;--success:#166342}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,"Segoe UI",Arial,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+button,a,input,label{ -webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
+[hidden]{display:none!important}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:"Arial Narrow","Liberation Sans Narrow",Arial,sans-serif;font-weight:600;line-height:1.2;letter-spacing:.01em}
+h1{font-size:clamp(38px,4.6vw,60px);letter-spacing:-.025em}
+h2{font-size:32px}
+h3{font-size:23px}
+p{color:var(--muted)}
+button{border-radius:2px;transition:background 120ms,border-color 120ms}
+.wrap{width:min(1200px,calc(100% - 48px));margin:auto}
+.header{border-bottom:1px solid var(--ink)}
+.header-inner{min-height:89px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{font:800 27px/1 Arial,sans-serif;letter-spacing:.12em;color:var(--ink)}
+.brand-block{display:flex;align-items:center;gap:30px}
+.brand-caption{border-left:1px solid var(--light-line);padding-left:26px;font-size:12px;line-height:1.5;color:var(--muted)}
+.preview-tag{display:flex;align-items:center;gap:9px;border:1px solid var(--light-line);padding:7px 12px;font-size:12px;white-space:nowrap}
+.preview-tag:before{content:"";width:6px;height:6px;background:var(--accent)}
+main{min-height:calc(100vh - 200px)}
+.eyebrow{display:flex;align-items:center;gap:10px;font:500 11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.eyebrow:before{content:"";height:7px;width:7px;background:var(--accent);flex-shrink:0}
+.section-index{font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.landing{padding:40px 0 48px}
+.landing-topline{display:flex;justify-content:space-between;gap:20px;padding-bottom:25px;border-bottom:1px solid var(--light-line)}
+.hero{display:grid;grid-template-columns:1.35fr 1fr;gap:64px;align-items:center;padding:40px 0}
+.hero-copy h1{margin:0 0 24px;max-width:650px}
+.hero-copy>p{font-size:18px;max-width:590px;line-height:1.65}
+.hero-actions{margin-top:30px}
+.primary{display:inline-flex;justify-content:space-between;align-items:center;gap:28px;background:var(--dark);color:white;border:1px solid var(--dark);padding:14px 22px;min-height:52px;font-size:14px;font-weight:600}
+.primary:hover{background:var(--accent);border-color:var(--accent)}
+.arrow{font-size:22px;font-weight:400;line-height:1}
+.micro{font-size:12px;line-height:1.6;color:var(--muted)}
+.hero-actions .micro{margin-top:12px}
+.visual{border:1px solid var(--line);background:var(--soft);position:relative;align-self:stretch;display:flex;flex-direction:column;min-height:412px}
+.visual-top,.visual-bottom{padding:13px 18px;display:flex;justify-content:space-between;align-items:center;gap:14px;font:10px/1.5 ui-monospace,Consolas,monospace;letter-spacing:.04em;color:var(--muted)}
+.visual-top{border-bottom:1px solid var(--light-line)}
+.visual-bottom{border-top:1px solid var(--light-line);font-size:10px}
+.grid-visual{position:relative;flex:1;padding:27px 25px;background-image:linear-gradient(#2759780c 1px,transparent 1px),linear-gradient(90deg,#2759780c 1px,transparent 1px);background-size:22px 22px;display:flex;flex-direction:column;justify-content:center}
+.path-head{display:flex;align-items:center;gap:12px;font:11px ui-monospace,Consolas,monospace;letter-spacing:.03em;color:var(--muted);margin-bottom:23px}
+.path-head span:last-child{color:var(--accent);font-weight:700}
+.path-line{height:1px;flex:1;background:var(--line);position:relative}
+.path-line:after{content:"";position:absolute;right:0;top:-3px;width:6px;height:6px;border-top:1px solid var(--line);border-right:1px solid var(--line);transform:rotate(45deg)}
+.dimension-wire{border:1px solid var(--light-line);background:#fffffff2;min-height:47px;display:flex;align-items:center;margin-bottom:9px}
+.dimension-wire .n{align-self:stretch;display:grid;place-items:center;width:44px;flex-shrink:0;border-right:1px solid var(--light-line);color:var(--accent);font:11px ui-monospace,Consolas,monospace}
+.dimension-wire .name{padding:9px 12px;font-size:12px;font-weight:500}
+.wire-end{width:6px;height:6px;border:1px solid var(--accent);margin-left:auto;margin-right:15px;flex-shrink:0}
+.visual-label{margin-top:15px;color:var(--accent);font:11px ui-monospace,Consolas,monospace;display:flex;gap:10px;align-items:center}
+.visual-label:before{content:"+";font-size:19px}
+.benefits{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink);border-bottom:1px solid var(--light-line)}
+.benefit{padding:24px 26px 25px 0;display:flex;gap:17px;font-size:14px}
+.benefit+.benefit{border-left:1px solid var(--light-line);padding-left:25px}
+.benefit .num{color:var(--accent);font:12px/1.7 ui-monospace,Consolas,monospace}
+.benefit p{color:var(--ink)}
+.context{display:grid;grid-template-columns:1fr 3fr;gap:32px;padding-top:28px}
+.context p{font-size:13px;max-width:880px}
+.footer{border-top:1px solid var(--light-line);padding:22px 0}
+.footer-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:26px}
+.footer p{font-size:11px;max-width:730px}
+.footer-label{font:10px/1.7 ui-monospace,Consolas,monospace;letter-spacing:.08em;white-space:nowrap;color:var(--muted)}
+.flow{width:min(1040px,calc(100% - 48px));margin:auto;padding:32px 0 56px}
+.flow-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+.text-button{border:0;background:transparent;color:var(--muted);font-size:12px;min-height:44px;padding:8px 0;text-decoration:underline;text-underline-offset:4px}
+.text-button:hover{color:var(--accent)}
+.progress-label{display:flex;justify-content:space-between;gap:16px;font-size:12px;color:var(--muted);margin-bottom:10px}
+.segments{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+.segment{height:5px;background:#E1E5E8}
+.segment.done{background:var(--accent)}
+.segment.current{background:var(--dark)}
+.question-wrap{width:min(760px,100%);margin:35px auto 0}
+.question-card{border:1px solid var(--line);padding:30px 32px 32px}
+.question-meta{display:flex;justify-content:space-between;gap:16px;margin-bottom:20px}
+.dimension-tag{font-size:12px;color:var(--accent)}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{padding:0;width:100%;font-family:"Arial Narrow","Liberation Sans Narrow",Arial,sans-serif;font-size:30px;font-weight:600;line-height:1.25;letter-spacing:-.01em}
+.question-help{font-size:12px;margin:12px 0 22px}
+.options{display:grid;gap:10px}
+.option{position:relative;display:flex;gap:15px;align-items:center;border:1px solid var(--line);padding:16px 17px;min-height:66px;cursor:pointer;transition:background 120ms,border-color 120ms}
+.option:hover{background:var(--soft)}
+.option:has(input:checked){background:#EDF3F7;border-color:var(--accent);box-shadow:inset 3px 0 var(--accent)}
+.option:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:3px}
+.option input{accent-color:var(--accent);width:19px;height:19px;margin:0;flex-shrink:0;outline:none}
+.option-copy{font-size:14px;line-height:1.6}
+.option-letter{margin-left:auto;font:10px ui-monospace,Consolas,monospace;color:var(--muted);padding-left:6px}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:20px}
+.secondary{min-height:48px;padding:10px 18px;border:1px solid var(--line);background:white;color:var(--ink);font-size:14px}
+.secondary:hover{background:var(--soft)}
+.nav-note{margin-top:20px;text-align:center;font-size:11px}
+.error{color:var(--danger);font-size:13px;margin-top:16px}
+.capture-layout{display:grid;grid-template-columns:1fr 1.15fr;gap:60px;margin:44px 0 10px;align-items:start}
+.capture-copy h1{font-size:42px;margin:16px 0 22px}
+.capture-copy>p{font-size:15px}
+.completed-marker{width:42px;height:42px;border:1px solid var(--accent);color:var(--accent);display:grid;place-items:center;font-size:22px;margin-bottom:30px}
+.result-contents{border-top:1px solid var(--light-line);margin-top:30px;padding-top:20px;list-style:none;padding-left:0}
+.result-contents li{font-size:13px;color:var(--muted);padding:7px 0;display:flex;gap:14px}
+.result-contents li:before{content:"↳";color:var(--accent)}
+.capture-panel{border:1px solid var(--line);padding:30px;background:var(--soft)}
+.form-note{font-size:12px;margin-bottom:22px}
+.field{margin-bottom:19px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:7px}
+.optional{font-weight:400;color:var(--muted)}
+.field input{width:100%;height:49px;border:1px solid var(--line);border-radius:2px;background:white;color:var(--ink);padding:10px 13px}
+.field input[aria-invalid=true]{border-color:var(--danger)}
+.capture-panel .primary{width:100%;margin-top:6px}
+.privacy-box{border-top:1px solid var(--light-line);padding-top:17px;margin-top:22px;font-size:11px}
+.results{width:min(1040px,calc(100% - 48px));margin:auto;padding:32px 0 56px}
+.result-heading{font-size:18px;font-weight:400;margin:12px 0 24px;color:var(--muted)}
+.score-panel{display:grid;grid-template-columns:260px 1fr;border:1px solid var(--ink)}
+.score-block{background:var(--dark);color:white;padding:28px;display:flex;flex-direction:column;justify-content:space-between;min-height:250px}
+.score-block .section-index{color:#D2D9DF;font-size:10px}
+.score-value{font:600 94px/1 "Arial Narrow","Liberation Sans Narrow",Arial,sans-serif;letter-spacing:-.04em;margin:14px 0 8px}
+.score-value span{font:400 22px system-ui,sans-serif;letter-spacing:0;color:#C3CBD1}
+.score-block p{color:#D2D9DF;font-size:11px}
+.profile-block{padding:30px 34px}
+.profile-label{display:inline-block;font-size:11px;font-weight:600;color:var(--accent);padding:4px 9px;border:1px solid var(--accent);margin-bottom:17px}
+.profile-block h2{font-size:30px;margin-bottom:16px}
+.profile-block p{font-size:14px}
+.section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin:33px 0 17px}
+.section-heading h2{font-size:25px}
+.section-heading p{font-size:11px}
+.dimension-results{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--light-line);border-left:1px solid var(--light-line)}
+.dimension-result{padding:22px 24px;border-right:1px solid var(--light-line);border-bottom:1px solid var(--light-line)}
+.dimension-result-top{display:flex;justify-content:space-between;gap:20px;align-items:center}
+.dimension-result h3{font:500 14px/1.5 system-ui,sans-serif}
+.dimension-number{font:600 24px/1.2 "Arial Narrow",Arial,sans-serif;white-space:nowrap;color:var(--accent)}
+.dimension-number small{font-size:12px;font-weight:400;color:var(--muted)}
+.bar{height:5px;background:#E1E5E8;margin:15px 0 12px}
+.bar span{height:100%;display:block;background:var(--accent)}
+.dimension-result p{font-size:11px}
+.priority-note{padding:15px 18px;border-left:3px solid var(--accent);background:var(--soft);font-size:13px;margin-top:16px}
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:32px}
+.analysis-column{border-top:1px solid var(--line);padding-top:20px}
+.analysis-column h3{font-size:23px}
+.copy-list{margin:16px 0 0;padding-left:18px;color:var(--muted);font-size:13px}
+.copy-list li{padding-left:6px;margin:10px 0}
+.recommendations{margin-top:34px}
+.recommendation{display:grid;grid-template-columns:40px 1fr;gap:16px;padding:18px 0;border-top:1px solid var(--light-line);font-size:14px}
+.recommendation .num{color:var(--accent);font:12px/1.8 ui-monospace,Consolas,monospace}
+.cta-panel{padding:26px;border:1px solid var(--line);margin-top:32px;background:var(--soft);display:grid;grid-template-columns:1fr auto;gap:25px;align-items:center}
+.cta-panel h3{margin-bottom:10px}
+.cta-panel p{font-size:13px}
+.cta-panel .primary{font-size:13px;gap:15px}
+.cta-note{grid-column:1/-1;border-top:1px solid var(--light-line);padding-top:17px}
+.result-disclaimer{font-size:11px;margin-top:22px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.screen{animation:appear 120ms ease-out}
+@keyframes appear{from{opacity:.65;transform:translateY(3px)}to{opacity:1;transform:none}}
+@media(min-width:1400px){.landing{padding-top:45px}.hero{padding:48px 0}}
+@media(max-width:1000px){.hero{gap:30px;grid-template-columns:1.2fr 1fr}.visual{min-height:380px}.grid-visual{padding:20px 17px}.capture-layout{gap:32px}.cta-panel{grid-template-columns:1fr}.cta-panel .primary{justify-self:start}.brand-caption{display:none}}
+@media(max-width:768px){
+.wrap,.flow,.results{width:calc(100% - 40px)}
+.header-inner{min-height:74px;gap:12px}.brand{font-size:22px}.preview-tag{font-size:10px;padding:6px 8px}
+.landing{padding-top:25px}.landing-topline{padding-bottom:18px}.landing-topline .section-index{display:none}
+.hero{grid-template-columns:1fr;gap:30px;padding:28px 0}.hero-copy h1{font-size:42px;max-width:580px}.hero-copy>p{font-size:16px}
+.hero-actions .primary{width:100%;gap:12px}.visual{min-height:330px}.grid-visual{padding:20px 25px}
+.benefits{grid-template-columns:1fr}.benefit{padding:18px 0!important}.benefit+.benefit{border-left:0;border-top:1px solid var(--light-line)}
+.context{grid-template-columns:1fr;gap:12px;padding-top:24px}
+.footer-inner{flex-direction:column;gap:12px}
+.flow{padding-top:20px}.flow-top{margin-bottom:13px}.flow-top .eyebrow{font-size:10px}
+.question-wrap{margin-top:25px}.question-card{padding:23px 19px}.question-meta{gap:10px;flex-wrap:wrap;margin-bottom:18px}
+legend{font-size:27px}.option{padding:14px 12px;gap:12px}.option-copy{font-size:13px}.option-letter{display:none}
+.nav{gap:10px}.nav .primary{padding:12px 15px;font-size:13px;gap:15px}.nav .secondary{font-size:13px;padding:12px}
+.capture-layout{grid-template-columns:1fr;gap:28px;margin-top:28px}.capture-copy h1{font-size:36px}.completed-marker{margin-bottom:20px}.result-contents{display:none}.capture-panel{padding:24px 20px}
+.score-panel{grid-template-columns:1fr}.score-block{min-height:190px;padding:24px}.score-value{font-size:80px}.profile-block{padding:24px}.profile-block h2{font-size:28px}
+.dimension-results{grid-template-columns:1fr}.dimension-result{padding:20px}.analysis-grid{grid-template-columns:1fr;gap:24px}.section-heading{align-items:flex-start;flex-direction:column;gap:7px}
+.cta-panel{padding:22px}.cta-panel .primary{width:100%}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{.header,.footer,.flow-top,.cta-panel button,#restart-results{display:none!important}.results{width:100%;padding:0}.score-panel,.dimension-results,.analysis-grid,.recommendation{break-inside:avoid}body{font-size:12px}.screen{animation:none}}
+</style>
+</head>
+<body data-project-id="leviatan_lead_magnet_test_001" data-lead-magnet-id="lmq_leviatan_lead_magnet_test_001_h61ddi" data-theme-id="lmq_leviatan_lead_magnet_test_001_h61ddi_theme_v1" data-render-version="2">
+<header class="header">
+<div class="wrap header-inner">
+<div class="brand-block"><div class="brand" aria-label="Leviatan">LEVIATAN</div><div class="brand-caption">IA générative<br>Repères de production</div></div>
+<div class="preview-tag">Aperçu interactif</div>
+</div>
+</header>
+<main id="main">
+<section id="landing" class="wrap landing screen" aria-labelledby="landing-title">
+<div class="landing-topline"><div class="eyebrow">Diagnostic / Maturité IA générative</div><span class="section-index">Du prototype à la production</span></div>
+<div class="hero">
+<div class="hero-copy">
+<h1 id="landing-title" tabindex="-1">Votre projet d’IA générative est-il prêt à passer en production ?</h1>
+<p>Évaluez sa maturité sur les dimensions essentielles de l’industrialisation et identifiez les priorités à traiter.</p>
+<div class="hero-actions">
+<button id="start" class="primary" type="button">Évaluer la maturité du projet <span class="arrow" aria-hidden="true">→</span></button>
+<p class="micro">8 questions · Environ 7 minutes · Diagnostic indicatif</p>
+</div>
+</div>
+<div class="visual" aria-label="Quatre dimensions pour examiner le passage du prototype à la production">
+<div class="visual-top"><span>REPÈRES D’INDUSTRIALISATION</span><span aria-hidden="true">[ 04 AXES ]</span></div>
+<div class="grid-visual">
+<div class="path-head" aria-hidden="true"><span>PROTOTYPE</span><span class="path-line"></span><span>PRODUCTION</span></div>
+<div class="dimension-wire"><span class="n">01</span><span class="name">Données et connaissances métier</span><span class="wire-end" aria-hidden="true"></span></div>
+<div class="dimension-wire"><span class="n">02</span><span class="name">Architecture et intégration</span><span class="wire-end" aria-hidden="true"></span></div>
+<div class="dimension-wire"><span class="n">03</span><span class="name">Fiabilité et sécurité</span><span class="wire-end" aria-hidden="true"></span></div>
+<div class="dimension-wire"><span class="n">04</span><span class="name">Pilotage et mesure de la valeur</span><span class="wire-end" aria-hidden="true"></span></div>
+<div class="visual-label">Un indice global. Des priorités concrètes.</div>
+</div>
+<div class="visual-bottom"><span>LECTURE STRUCTURÉE DU PROJET</span><span aria-hidden="true">+ ── +</span></div>
+</div>
+</div>
+<div class="benefits">
+<div class="benefit"><span class="num">01</span><p>Obtenir un indice synthétique de maturité pour votre projet d’IA générative.</p></div>
+<div class="benefit"><span class="num">02</span><p>Repérer les dimensions qui présentent les principaux risques d’industrialisation.</p></div>
+<div class="benefit"><span class="num">03</span><p>Prioriser les actions techniques et organisationnelles avant un passage en production.</p></div>
+</div>
+<div class="context"><span class="section-index">Le périmètre du diagnostic</span><p>Ce diagnostic indicatif examine la préparation de votre projet au regard des données, de l’architecture, de la fiabilité, de la sécurité, de l’intégration au système d’information et du pilotage de la valeur. Il ne constitue pas un audit professionnel complet, mais fournit une lecture structurée des principaux écarts entre prototype et production.</p></div>
+</section>
+
+<section id="questionnaire" class="flow screen" hidden aria-label="Questionnaire de maturité">
+<div class="flow-top"><div class="eyebrow">Diagnostic en cours</div><button class="text-button restart" type="button">Recommencer</button></div>
+<div class="progress-label"><span id="progress-text"></span><span id="progress-count"></span></div>
+<div id="progress" class="segments" role="progressbar" aria-label="Questions renseignées" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0"></div>
+<div class="question-wrap">
+<form id="question-form" novalidate>
+<div class="question-card">
+<div class="question-meta"><span id="question-index" class="section-index"></span><span id="question-dimension" class="dimension-tag"></span></div>
+<fieldset id="question-fieldset" aria-describedby="question-help question-error">
+<legend id="question-title" tabindex="-1"></legend>
+<p id="question-help" class="question-help"></p>
+<div id="options" class="options"></div>
+</fieldset>
+<p id="question-error" class="error" role="alert" hidden>Veuillez sélectionner une réponse pour continuer.</p>
+</div>
+<div class="nav">
+<button id="previous" class="secondary" type="button">← Précédent</button>
+<button id="next" class="primary" type="submit"><span id="next-label">Continuer</span><span class="arrow" aria-hidden="true">→</span></button>
+</div>
+</form>
+<p class="micro nav-note">Choisissez la réponse qui décrit le mieux la situation actuelle de votre projet.</p>
+</div>
+</section>
+
+<section id="capture" class="flow screen" hidden aria-labelledby="capture-title">
+<div class="flow-top"><div class="eyebrow">Diagnostic renseigné / 8 sur 8</div><button class="text-button restart" type="button">Recommencer</button></div>
+<div class="segments" aria-hidden="true"><span class="segment done"></span><span class="segment done"></span><span class="segment done"></span><span class="segment done"></span><span class="segment done"></span><span class="segment done"></span><span class="segment done"></span><span class="segment done"></span></div>
+<div class="capture-layout">
+<div class="capture-copy">
+<div class="completed-marker" aria-hidden="true">✓</div>
+<div class="eyebrow">Votre lecture de maturité</div>
+<h1 id="capture-title" tabindex="-1">Accédez à votre profil de maturité détaillé</h1>
+<p>Renseignez vos informations pour afficher votre score, vos points de vigilance et vos priorités d’industrialisation. Dans cette démonstration, aucune réponse ni coordonnée n’est collectée ou stockée.</p>
+<ul class="result-contents"><li>Votre indice global sur 100</li><li>Une lecture de vos quatre dimensions</li><li>Vos points de vigilance et actions prioritaires</li></ul>
+</div>
+<form id="lead-form" class="capture-panel" novalidate autocomplete="off">
+<p class="form-note">Les champs marqués d’un * sont obligatoires.</p>
+<div class="field"><label for="first-name">Prénom *</label><input id="first-name" name="first_name" type="text" required autocomplete="off" maxlength="120"></div>
+<div class="field"><label for="email">E-mail professionnel *</label><input id="email" name="email" type="email" required autocomplete="off" spellcheck="false" maxlength="254"></div>
+<div class="field"><label for="company">Entreprise <span class="optional">— facultatif</span></label><input id="company" name="company" type="text" autocomplete="off" maxlength="200"></div>
+<p id="lead-error" class="error" role="alert" hidden></p>
+<button class="primary" type="submit">Afficher mon profil détaillé <span class="arrow" aria-hidden="true">→</span></button>
+<p class="privacy-box">Cette version est une démonstration sans collecte ni stockage des réponses ou des coordonnées. Aucune publication en production n’est effectuée.</p>
+</form>
+</div>
+<button id="review" class="text-button" type="button">← Revoir mes réponses</button>
+</section>
+
+<section id="results" class="results screen" hidden aria-labelledby="results-title">
+<div class="flow-top"><div class="eyebrow">Restitution / Maturité IA générative</div><button id="restart-results" class="text-button restart" type="button">Recommencer le diagnostic</button></div>
+<h1 id="results-title" class="result-heading" tabindex="-1">Indice de maturité pour l’industrialisation de votre IA générative</h1>
+<div class="score-panel">
+<div class="score-block"><div class="section-index">Indice global de maturité</div><div class="score-value"><strong id="overall-score"></strong><span> / 100</span></div><p>4 dimensions à poids égal<br>Évaluation fondée sur vos réponses</p></div>
+<div class="profile-block"><span id="profile-label" class="profile-label"></span><h2 id="profile-headline"></h2><p id="profile-summary"></p></div>
+</div>
+<div class="section-heading"><h2>Les quatre dimensions</h2><p>Score rapporté aux points disponibles pour chaque dimension.</p></div>
+<div id="dimension-results" class="dimension-results"></div>
+<p id="priority-note" class="priority-note"></p>
+<div class="analysis-grid">
+<div class="analysis-column"><h3>Points d’appui du profil</h3><ul id="strengths" class="copy-list"></ul></div>
+<div class="analysis-column"><h3>Points de vigilance</h3><ul id="weaknesses" class="copy-list"></ul></div>
+</div>
+<div class="recommendations"><div class="section-heading"><h2>Vos priorités d’industrialisation</h2><p>Actions recommandées pour votre profil</p></div><div id="recommendations"></div></div>
+<div class="cta-panel">
+<div><h3>Préparer la prochaine étape</h3><p>Examinez vos priorités d’industrialisation avec Leviatan afin d’identifier les travaux à mener sur l’architecture, les données, la fiabilité, la sécurité et l’intégration de votre projet d’IA générative.</p></div>
+<button id="expert-cta" class="primary" type="button" aria-expanded="false" aria-controls="cta-note">Échanger avec un expert Leviatan <span class="arrow" aria-hidden="true">↗</span></button>
+<p id="cta-note" class="cta-note" role="status" hidden>Vous consultez un aperçu interactif. Aucun lien de prise de contact n’est configuré dans cette démonstration : aucune demande ni coordonnée n’est transmise.</p>
+</div>
+<p class="result-disclaimer">Ce diagnostic est indicatif et repose sur vos déclarations. Il ne constitue ni un audit professionnel complet ni une validation de mise en production. Les points d’appui et de vigilance correspondent au profil global obtenu.</p>
+</section>
+</main>
+<footer class="footer">
+<div class="wrap footer-inner"><p>Aperçu de démonstration. Aucune donnée saisie n’est enregistrée ni transmise. Vos réponses restent uniquement en mémoire pendant ce parcours et sont effacées au rechargement ou au redémarrage.</p><span class="footer-label">LEVIATAN / REPÈRES DE PRODUCTION</span></div>
+</footer>
+<div id="announcement" class="sr-only" aria-live="polite"></div>
+<noscript><p class="wrap" style="padding:24px 0">Activez JavaScript pour utiliser cet aperçu interactif. Aucune donnée ne sera transmise.</p></noscript>
+<script>
+"use strict";
+(function(){
+const dimensions=[
+{id:"donnees",name:"Données et connaissances métier",description:"Évalue la disponibilité, la qualité, la gouvernance et l’accessibilité des données nécessaires au système d’IA générative.",weight:1},
+{id:"architecture",name:"Architecture et intégration",description:"Évalue la solidité des choix d’architecture et la capacité du projet à s’intégrer aux systèmes et processus métier.",weight:1},
+{id:"fiabilite_securite",name:"Fiabilité et sécurité",description:"Évalue les mécanismes de validation, de supervision, de confidentialité et de maîtrise des risques.",weight:1},
+{id:"pilotage",name:"Pilotage et mesure de la valeur",description:"Évalue la capacité à mesurer la qualité, les coûts, l’adoption et la contribution du système aux objectifs métier.",weight:1}
+];
+const questionData=[
+["architecture","À quel stade se trouve actuellement votre projet d’IA générative ?",[
+"Le besoin est identifié, mais aucun prototype fonctionnel n’est encore disponible.",
+"Un prototype fonctionne sur un périmètre ou avec des données limités.",
+"Un pilote est utilisé dans un environnement contrôlé par des utilisateurs identifiés.",
+"La solution est intégrée à un environnement proche de la production avec des processus de déploiement définis."]],
+["donnees","Comment les sources de données et de connaissances utilisées par le projet sont-elles maîtrisées ?",[
+"Les sources restent à identifier ou sont principalement constituées de jeux de données ponctuels.",
+"Les principales sources sont identifiées, mais leur qualité, leur actualisation ou leurs droits d’accès sont peu documentés.",
+"Les sources prioritaires sont documentées et accessibles, avec des règles partielles de qualité et d’actualisation.",
+"Les sources sont gouvernées, versionnées et suivies selon des règles explicites de qualité, d’accès et d’actualisation."]],
+["donnees","Dans quelle mesure la préparation des données est-elle reproductible ?",[
+"La préparation est réalisée manuellement, sans procédure stable.",
+"Certaines étapes sont documentées, mais leur exécution dépend encore fortement d’interventions manuelles.",
+"Les traitements principaux sont automatisés, avec des contrôles sur une partie des données.",
+"Les traitements sont automatisés, testés, traçables et assortis de contrôles de qualité."]],
+["architecture","Comment les choix entre intégration LLM, architecture RAG, agent IA ou système multi-agents ont-ils été établis ?",[
+"Aucun choix d’architecture n’est encore formalisé.",
+"Une approche a été retenue principalement pour accélérer le prototype.",
+"Le choix repose sur des critères techniques et métier documentés, mais n’a pas encore été validé à l’échelle cible.",
+"L’architecture a été comparée à des alternatives et validée selon des critères de performance, de coût, de sécurité et d’intégration."]],
+["fiabilite_securite","Comment évaluez-vous la fiabilité des réponses ou actions produites par le système ?",[
+"La qualité est appréciée de manière informelle à partir de quelques exemples.",
+"Des tests manuels sont réalisés, sans jeu d’évaluation stable ni seuil d’acceptation.",
+"Un jeu de tests représentatif et des critères de qualité sont utilisés avant les principales évolutions.",
+"Des évaluations reproductibles, des seuils d’acceptation et une supervision en exploitation encadrent les réponses ou actions."]],
+["fiabilite_securite","Quel niveau de contrôle appliquez-vous aux risques de sécurité et de confidentialité ?",[
+"Les risques spécifiques au projet n’ont pas encore été analysés.",
+"Des précautions générales existent, mais les flux de données, les accès et les fournisseurs ne sont pas tous documentés.",
+"Les données sensibles, les droits d’accès et les principaux scénarios de risque sont identifiés et partiellement contrôlés.",
+"Les flux, accès, journaux et dépendances externes sont encadrés par des contrôles documentés et régulièrement vérifiés."]],
+["pilotage","Comment le projet est-il intégré aux systèmes d’information et aux processus métier ?",[
+"Le prototype fonctionne de manière isolée, sans intégration définie.",
+"Les intégrations nécessaires sont identifiées, mais reposent encore sur des échanges manuels ou temporaires.",
+"Les principales interfaces sont développées et testées sur un périmètre contrôlé.",
+"La solution est intégrée aux flux métier avec des responsabilités, des procédures de repli et un suivi opérationnel définis."]],
+["pilotage","Comment mesurez-vous la qualité, les coûts et la valeur métier du projet ?",[
+"Aucun indicateur partagé n’est encore défini.",
+"Quelques indicateurs techniques ou retours utilisateurs sont suivis de manière ponctuelle.",
+"Des indicateurs de qualité, de coût et d’usage sont définis, avec une mesure régulière sur le pilote.",
+"Des objectifs, seuils et tableaux de bord relient la qualité technique, les coûts, l’adoption et la valeur métier."]]
+];
+const questions=questionData.map((data,i)=>({
+id:"q"+(i+1),type:"single_choice",required:true,primary_dimension_id:data[0],text:data[1],
+options:data[2].map((label,index)=>({id:"q"+(i+1)+"_"+index,label,scores:[{dimension_id:data[0],points:index}]}))
+}));
+const profiles=[
+{min:0,max:29,label:"Fondations à structurer",
+headline:"Le projet nécessite encore un cadrage structurant avant l’industrialisation",
+summary:"Le projet se situe principalement au stade de l’exploration ou du prototype initial. Plusieurs prérequis de production restent à formaliser, notamment autour des données, de l’architecture, des contrôles et des critères de réussite.",
+strengths:["Un cas d’usage d’IA générative est déjà identifié et peut servir de base au cadrage."],
+weaknesses:["Les dépendances critiques et les conditions de passage en production sont encore insuffisamment documentées.","La qualité, la sécurité ou la valeur métier ne disposent pas encore de critères de validation stables."],
+recommendations:["Définir précisément le cas d’usage, les utilisateurs, les données nécessaires et les limites fonctionnelles.","Comparer les options d’architecture selon des critères explicites de qualité, de sécurité, de coût et d’intégration.","Établir un premier jeu d’évaluation ainsi que des indicateurs métier avant d’élargir le périmètre.","Cartographier les données sensibles, les droits d’accès et les dépendances externes du projet."]},
+{min:30,max:54,label:"Prototype à consolider",
+headline:"Le prototype est prometteur, mais plusieurs écarts doivent être résorbés",
+summary:"Des composants fonctionnels existent, mais l’industrialisation dépend encore de pratiques manuelles, de validations ponctuelles ou d’intégrations temporaires. Le prochain enjeu consiste à rendre les choix et les contrôles reproductibles.",
+strengths:["Le projet dispose d’un prototype exploitable pour préciser les exigences de production.","Les principales sources de données ou contraintes techniques commencent à être identifiées."],
+weaknesses:["Les processus de préparation, de test ou de déploiement restent partiellement manuels.","Les critères d’acceptation et les mécanismes de supervision sont encore incomplets."],
+recommendations:["Transformer les tests exploratoires en protocole d’évaluation reproductible avec des seuils d’acceptation.","Automatiser progressivement la préparation des données et documenter leur qualité, leur actualisation et leurs droits d’accès.","Valider l’architecture cible sur les volumes, les coûts et les contraintes d’intégration attendus.","Formaliser un plan de traitement des risques de confidentialité, de sécurité et de dépendance aux modèles."]},
+{min:55,max:79,label:"Pilote préindustriel",
+headline:"Le projet approche de la production, avec des points de contrôle à renforcer",
+summary:"Le projet présente des bases techniques et organisationnelles solides. Le passage en production paraît envisageable après consolidation des dimensions les moins matures et validation du comportement du système dans les conditions d’exploitation visées.",
+strengths:["Les choix d’architecture et les principales intégrations sont déjà structurés.","Des pratiques d’évaluation, de sécurité ou de pilotage sont en place sur le périmètre pilote."],
+weaknesses:["Certains contrôles peuvent ne pas couvrir l’ensemble des scénarios, des données ou des conditions d’exploitation.","La supervision opérationnelle et la mesure continue de la valeur peuvent encore être renforcées."],
+recommendations:["Traiter en priorité la dimension obtenant le score le plus faible avant d’élargir le déploiement.","Tester la solution sur des cas limites, des variations de charge et des scénarios de défaillance.","Définir les responsabilités d’exploitation, les alertes, les procédures de repli et les règles de mise à jour.","Relier les indicateurs de qualité et de coût à des objectifs d’usage et de valeur métier."]},
+{min:80,max:100,label:"Prêt pour l’industrialisation",
+headline:"Le projet dispose de bases avancées pour une industrialisation maîtrisée",
+summary:"Les principales conditions de passage en production sont structurées : données gouvernées, architecture argumentée, contrôles de fiabilité et de sécurité, intégration opérationnelle et indicateurs de pilotage. Une revue technique ciblée reste utile pour confirmer les hypothèses à l’échelle réelle.",
+strengths:["Les processus critiques sont documentés, reproductibles et associés à des contrôles.","Le projet relie les exigences techniques aux contraintes opérationnelles et aux objectifs métier."],
+weaknesses:["Les risques résiduels se situent principalement dans la montée en charge, l’évolution des données et la dérive des performances.","La maturité doit être entretenue après le déploiement par une gouvernance et une supervision continues."],
+recommendations:["Réaliser une revue de préparation à la production centrée sur les risques résiduels et les dépendances critiques.","Valider les performances, les coûts et la résilience dans des conditions représentatives de l’usage cible.","Mettre en place un cycle continu d’évaluation des modèles, des données et des composants RAG ou agents.","Planifier la gouvernance des évolutions, des incidents et des arbitrages entre qualité, coût et délai."]}
+];
+const tieOrder=["fiabilite_securite","donnees","architecture","pilotage"];
+let answers={},current=0;
+const $=id=>document.getElementById(id);
+function make(tag,className,text){
+const node=document.createElement(tag);
+if(className)node.className=className;
+if(text!==undefined)node.textContent=text;
+return node;
+}
+function show(id,focusId){
+["landing","questionnaire","capture","results"].forEach(name=>{$(name).hidden=name!==id;});
+window.scrollTo(0,0);
+if(focusId)$(focusId).focus({preventScroll:true});
+}
+function completed(){return questions.filter(q=>(answers[q.id]||[]).length>0).length;}
+function updateProgress(){
+$("progress-text").textContent="Question "+(current+1)+" sur "+questions.length;
+$("progress-count").textContent=completed()+" / "+questions.length+" renseignées";
+$("progress").setAttribute("aria-valuenow",String(completed()));
+$("progress").replaceChildren(...questions.map((q,i)=>make("span","segment"+(i===current?" current":(answers[q.id]||[]).length?" done":""))));
+}
+function renderQuestion(){
+const q=questions[current];
+$("question-index").textContent="Question "+String(current+1).padStart(2,"0")+" / 08";
+$("question-dimension").textContent=dimensions.find(d=>d.id===q.primary_dimension_id).name;
+$("question-title").textContent=q.text;
+$("question-help").textContent=q.type==="multiple_choice"?"Plusieurs réponses possibles · Réponse obligatoire":"Une seule réponse · Réponse obligatoire";
+$("question-error").hidden=true;
+$("question-fieldset").removeAttribute("aria-invalid");
+$("options").replaceChildren();
+q.options.forEach((option,i)=>{
+const label=make("label","option");
+const input=document.createElement("input");
+input.type=q.type==="multiple_choice"?"checkbox":"radio";
+input.name=q.id;
+input.value=option.id;
+input.checked=(answers[q.id]||[]).includes(option.id);
+input.addEventListener("change",()=>{
+if(q.type==="multiple_choice"){
+answers[q.id]=Array.from($("options").querySelectorAll("input:checked"),el=>el.value);
+}else{answers[q.id]=[option.id];}
+$("question-error").hidden=true;
+$("question-fieldset").removeAttribute("aria-invalid");
+updateProgress();
+});
+const letter=make("span","option-letter",String.fromCharCode(65+i));
+letter.setAttribute("aria-hidden","true");
+label.append(input,make("span","option-copy",option.label),letter);
+$("options").append(label);
+});
+$("previous").textContent=current===0?"← Introduction":"← Précédent";
+$("next-label").textContent=current===questions.length-1?"Terminer le diagnostic":"Continuer";
+updateProgress();
+show("questionnaire","question-title");
+}
+$("start").addEventListener("click",()=>{current=0;renderQuestion();});
+$("previous").addEventListener("click",()=>{
+if(current===0){show("landing","landing-title");}else{current--;renderQuestion();}
+});
+$("question-form").addEventListener("submit",event=>{
+event.preventDefault();
+const q=questions[current];
+if(q.required&&!(answers[q.id]||[]).length){
+$("question-error").hidden=false;
+$("question-fieldset").setAttribute("aria-invalid","true");
+$("options").querySelector("input").focus();
+return;
+}
+if(current<questions.length-1){current++;renderQuestion();}
+else{show("capture","capture-title");}
+});
+$("review").addEventListener("click",()=>{current=questions.length-1;renderQuestion();});
+
+function score(){
+const values=dimensions.map(d=>{
+let points=0,available=0;
+questions.forEach(q=>{
+const optionPoints=q.options.map(o=>o.scores.filter(s=>s.dimension_id===d.id).reduce((sum,s)=>sum+s.points,0));
+available+=q.type==="multiple_choice"?optionPoints.reduce((sum,p)=>sum+Math.max(0,p),0):Math.max(0,...optionPoints);
+q.options.forEach((o,i)=>{if((answers[q.id]||[]).includes(o.id))points+=optionPoints[i];});
+});
+return {...d,score:available?100*points/available:0,available};
+});
+const active=values.filter(d=>d.available>0);
+const totalWeight=active.reduce((sum,d)=>sum+d.weight,0);
+const overall=Math.round(totalWeight?active.reduce((sum,d)=>sum+d.score*d.weight,0)/totalWeight:0);
+return {values,overall:Math.min(100,Math.max(0,overall))};
+}
+function populateList(id,items){$(id).replaceChildren(...items.map(text=>make("li","",text)));}
+function renderResults(){
+const result=score();
+const profile=profiles.find(p=>result.overall>=p.min&&result.overall<=p.max);
+$("overall-score").textContent=result.overall;
+$("profile-label").textContent=profile.label;
+$("profile-headline").textContent=profile.headline;
+$("profile-summary").textContent=profile.summary;
+$("dimension-results").replaceChildren();
+result.values.forEach(d=>{
+const card=make("div","dimension-result");
+const top=make("div","dimension-result-top");
+const number=make("div","dimension-number",String(Math.round(d.score)));
+number.append(make("small",""," / 100"));
+top.append(make("h3","",d.name),number);
+const bar=make("div","bar");
+bar.setAttribute("aria-hidden","true");
+const fill=make("span");fill.style.width=d.score+"%";bar.append(fill);
+card.append(top,bar,make("p","",d.description));
+$("dimension-results").append(card);
+});
+const ordered=result.values.slice().sort((a,b)=>(a.score-b.score)||(tieOrder.indexOf(a.id)-tieOrder.indexOf(b.id)));
+const allEqual=ordered.every(d=>d.score===ordered[0].score);
+$("priority-note").textContent=allEqual
+?"Vos quatre dimensions obtiennent le même score. À maturité égale, examinez d’abord la fiabilité et la sécurité."
+:"Dimension à examiner en priorité : "+ordered[0].name+". Elle présente le score le plus faible"+(ordered[0].score===ordered[1].score?" (à égalité ; priorité donnée selon les enjeux de risque).":".");
+populateList("strengths",profile.strengths);
+populateList("weaknesses",profile.weaknesses);
+$("recommendations").replaceChildren(...profile.recommendations.map((text,i)=>{
+const row=make("div","recommendation");row.append(make("span","num",String(i+1).padStart(2,"0")),make("p","",text));return row;
+}));
+$("cta-note").hidden=true;
+$("expert-cta").setAttribute("aria-expanded","false");
+show("results","results-title");
+$("announcement").textContent="Votre profil de maturité est disponible. Indice global : "+result.overall+" sur 100. "+profile.label+".";
+}
+$("lead-form").addEventListener("submit",event=>{
+event.preventDefault();
+const first=$("first-name"),email=$("email");
+[first,email].forEach(field=>field.removeAttribute("aria-invalid"));
+let invalid=null,message="";
+if(!first.value.trim()){invalid=first;message="Veuillez renseigner votre prénom.";}
+else if(!email.value.trim()||!email.validity.valid){invalid=email;message="Veuillez saisir une adresse e-mail valide.";}
+if(invalid){
+$("lead-error").textContent=message;$("lead-error").hidden=false;
+invalid.setAttribute("aria-invalid","true");invalid.setAttribute("aria-describedby","lead-error");invalid.focus();return;
+}
+$("lead-error").hidden=true;
+$("lead-form").reset();
+[first,email].forEach(field=>field.removeAttribute("aria-describedby"));
+renderResults();
+});
+$("expert-cta").addEventListener("click",()=>{
+const open=$("cta-note").hidden;
+$("cta-note").hidden=!open;$("expert-cta").setAttribute("aria-expanded",String(open));
+});
+function restart(){
+answers={};current=0;
+$("lead-form").reset();
+$("lead-error").hidden=true;
+["first-name","email"].forEach(id=>{$(id).removeAttribute("aria-invalid");$(id).removeAttribute("aria-describedby");});
+$("options").replaceChildren();
+["dimension-results","strengths","weaknesses","recommendations"].forEach(id=>$(id).replaceChildren());
+["overall-score","profile-label","profile-headline","profile-summary","priority-note"].forEach(id=>$(id).textContent="");
+$("announcement").textContent="Diagnostic réinitialisé. Les réponses ont été effacées.";
+show("landing","landing-title");
+}
+document.querySelectorAll(".restart").forEach(button=>button.addEventListener("click",restart));
+})();
+</script>
+</body>
+</html>
