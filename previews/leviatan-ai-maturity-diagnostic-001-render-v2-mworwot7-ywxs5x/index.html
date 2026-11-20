@@ -1,0 +1,2400 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="robots"
+    content="noindex,nofollow,noarchive"
+  >
+
+  <meta
+    name="color-scheme"
+    content="light"
+  >
+
+  <title>
+    Votre projet d’IA est-il prêt à être industrialisé ? — Preview
+  </title>
+
+  <style>
+    :root {
+      --page-bg: #FFFFFF;
+      --surface: #FFFFFF;
+      --surface-alt: #F3F5F7;
+      --text: #151922;
+      --text-secondary: #495463;
+      --primary: #191B20;
+      --primary-contrast: #FFFFFF;
+      --secondary: #E5E5E5;
+      --accent: #36516D;
+      --border: #7A838F;
+      --focus: #0064CA;
+      --success: #176647;
+      --warning: #805300;
+      --danger: #A42622;
+
+      --font-heading: "Arial Narrow", "Liberation Sans Narrow", Arial, sans-serif;
+      --font-body: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+
+      --heading-weight: 600;
+      --body-weight: 400;
+      --base-size: 17px;
+
+      --heading-spacing: 0.015em;
+      --body-spacing: 0em;
+      --heading-line: 1.2;
+      --body-line: 1.55;
+      --heading-transform: none;
+
+      --border-width: 1px;
+      --radius-sm: 0px;
+      --radius-md: 2px;
+      --radius-lg: 2px;
+      --button-radius: 0px;
+
+      --page-padding: 24px;
+      --section-gap: 64px;
+      --card-padding: 24px;
+      --field-gap: 16px;
+
+      --max-width: 1200px;
+      --content-width: 1040px;
+      --question-width: 680px;
+
+      --transition: 140ms;
+      --focus-width: 3px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--page-bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: var(--base-size);
+      font-weight: var(--body-weight);
+      line-height: var(--body-line);
+      letter-spacing: var(--body-spacing);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    a:focus-visible {
+      outline:
+        var(--focus-width)
+        solid
+        var(--focus);
+
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 1000;
+
+      padding: 10px 14px;
+
+      background: var(--primary);
+      color: var(--primary-contrast);
+
+      transform: translateY(-160%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .site-header {
+      width: min(
+        calc(
+          100% -
+          (var(--page-padding) * 2)
+        ),
+        var(--max-width)
+      );
+
+      min-height: 70px;
+      margin: 0 auto;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .header-bordered .site-header {
+      border-bottom:
+        var(--border-width)
+        solid
+        var(--border);
+    }
+
+    .header-floating .site-header {
+      margin-top: 16px;
+      padding: 0 22px;
+
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+
+      box-shadow:
+        0 12px 32px
+        rgba(21, 25, 34, 0.08);
+    }
+
+    .wordmark {
+      font-family: var(--font-heading);
+      font-weight: var(--heading-weight);
+      font-size: 1.05rem;
+
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .preview-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 5px 9px;
+
+      border:
+        var(--border-width)
+        solid
+        color-mix(
+          in srgb,
+          var(--border) 68%,
+          transparent
+        );
+
+      border-radius: 999px;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--surface-alt) 72%,
+          transparent
+        );
+
+      color: var(--text-secondary);
+
+      font-size: 0.68rem;
+      font-weight: 700;
+
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .preview-badge::before {
+      content: "";
+
+      width: 7px;
+      height: 7px;
+
+      border-radius: 50%;
+      background: var(--success);
+
+      box-shadow:
+        0 0 0 3px
+        color-mix(
+          in srgb,
+          var(--success) 16%,
+          transparent
+        );
+    }
+
+    main {
+      width: min(
+        calc(
+          100% -
+          (var(--page-padding) * 2)
+        ),
+        var(--max-width)
+      );
+
+      margin: 0 auto;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+      animation:
+        reveal
+        var(--transition)
+        ease
+        both;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+
+      font-family: var(--font-heading);
+      font-weight: var(--heading-weight);
+      line-height: var(--heading-line);
+      letter-spacing: var(--heading-spacing);
+      text-transform: var(--heading-transform);
+    }
+
+    h1 {
+      max-width: 19ch;
+
+      font-size:
+        clamp(
+          2.8rem,
+          5vw,
+          4.75rem
+        );
+
+      line-height:
+        min(
+          var(--heading-line),
+          1.08
+        );
+
+      text-wrap: balance;
+    }
+
+    h2 {
+      font-size:
+        clamp(
+          1.7rem,
+          4vw,
+          2.8rem
+        );
+    }
+
+    h3 {
+      font-size: 1.3rem;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+
+      color: var(--accent);
+
+      font-size: 0.8rem;
+      font-weight: 700;
+
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .hero {
+      padding:
+        clamp(52px, 7vw, 86px)
+        0
+        clamp(64px, 8vw, 104px);
+
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1.08fr)
+        minmax(380px, 0.92fr);
+
+      align-items: center;
+
+      gap:
+        clamp(
+          40px,
+          6vw,
+          82px
+        );
+    }
+
+    .hero-center .hero,
+    .hero-left .hero {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-center .hero-copy {
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .hero-center .hero-copy h1 {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-left .hero-copy {
+      max-width: 780px;
+    }
+
+    .hero-description {
+      max-width: 58ch;
+      margin: 0 0 28px;
+
+      color: var(--text-secondary);
+
+      font-size:
+        clamp(
+          1rem,
+          2vw,
+          1.22rem
+        );
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 12px;
+
+      margin: 26px 0 0;
+
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    .hero-meta span {
+      min-height: 30px;
+      padding: 4px 10px;
+
+      display: inline-flex;
+      align-items: center;
+
+      border:
+        var(--border-width)
+        solid
+        color-mix(
+          in srgb,
+          var(--border) 55%,
+          transparent
+        );
+
+      border-radius: 999px;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--surface-alt) 64%,
+          transparent
+        );
+    }
+
+    .hero-visual {
+      position: relative;
+      isolation: isolate;
+
+      min-height: 520px;
+
+      padding:
+        clamp(
+          24px,
+          3.5vw,
+          42px
+        );
+
+      overflow: hidden;
+
+      border: 0;
+
+      border-radius:
+        max(
+          var(--radius-large),
+          18px
+        );
+
+      background: var(--primary);
+      color: var(--primary-contrast);
+
+      box-shadow:
+        0 30px 80px
+        rgba(21, 25, 34, 0.18);
+    }
+
+    .visual-none .hero-visual {
+      display: none;
+    }
+
+    .visual-none .hero {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-visual::before {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+
+      opacity: 0.55;
+
+      background:
+        radial-gradient(
+          circle at 82% 18%,
+          color-mix(
+            in srgb,
+            var(--accent) 72%,
+            transparent
+          ),
+          transparent 32%
+        ),
+        radial-gradient(
+          circle at 10% 92%,
+          color-mix(
+            in srgb,
+            var(--accent) 38%,
+            transparent
+          ),
+          transparent 35%
+        );
+    }
+
+    .visual-data_grid .hero-visual::after {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+
+      opacity: 0.18;
+
+      background-image:
+        linear-gradient(
+          rgba(255, 255, 255, 0.38) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.38) 1px,
+          transparent 1px
+        );
+
+      background-size:
+        38px 38px,
+        38px 38px;
+
+      mask-image:
+        linear-gradient(
+          to bottom right,
+          black,
+          transparent 76%
+        );
+    }
+
+    .visual-gradient .hero-visual {
+      background:
+        linear-gradient(
+          145deg,
+          var(--primary),
+          var(--accent)
+        );
+    }
+
+    .visual-geometric .hero-visual,
+    .visual-abstract_network .hero-visual {
+      background:
+        linear-gradient(
+          135deg,
+          transparent 0 48%,
+          rgba(255, 255, 255, 0.16) 48% 50%,
+          transparent 50%
+        ),
+        linear-gradient(
+          45deg,
+          var(--primary),
+          var(--accent)
+        );
+    }
+
+    .visual-editorial .hero-visual {
+      background: var(--surface-alt);
+      color: var(--text);
+    }
+
+    .demo-frame {
+      position: relative;
+      z-index: 2;
+
+      min-height: 100%;
+
+      padding:
+        clamp(
+          22px,
+          3vw,
+          32px
+        );
+
+      display: flex;
+      flex-direction: column;
+
+      border:
+        1px solid
+        rgba(255, 255, 255, 0.2);
+
+      border-radius:
+        max(
+          var(--radius-medium),
+          12px
+        );
+
+      background:
+        color-mix(
+          in srgb,
+          var(--surface) 96%,
+          transparent
+        );
+
+      color: var(--text);
+
+      box-shadow:
+        0 18px 45px
+        rgba(0, 0, 0, 0.18);
+
+      backdrop-filter: blur(12px);
+    }
+
+    .demo-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+
+      padding-bottom: 17px;
+
+      border-bottom:
+        var(--border-width)
+        solid
+        color-mix(
+          in srgb,
+          var(--border) 55%,
+          transparent
+        );
+
+      color: var(--text-secondary);
+
+      font-size: 0.7rem;
+      font-weight: 700;
+
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .demo-progress {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-progress::before {
+      content: "";
+
+      width: 28px;
+      height: 4px;
+
+      background:
+        linear-gradient(
+          to right,
+          var(--accent) 25%,
+          var(--secondary) 25%
+        );
+    }
+
+    .demo-question {
+      flex: 1;
+
+      padding:
+        clamp(
+          26px,
+          4vw,
+          42px
+        )
+        0
+        28px;
+    }
+
+    .demo-kicker {
+      margin: 0 0 12px;
+
+      color: var(--accent);
+
+      font-size: 0.72rem;
+      font-weight: 800;
+
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .demo-question h3 {
+      max-width: 24ch;
+      margin-bottom: 24px;
+
+      font-size:
+        clamp(
+          1.42rem,
+          2.3vw,
+          2rem
+        );
+
+      line-height: 1.18;
+      text-wrap: balance;
+    }
+
+    .demo-options {
+      display: grid;
+      gap: 9px;
+    }
+
+    .demo-option {
+      min-height: 46px;
+      padding: 10px 13px;
+
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      border:
+        var(--border-width)
+        solid
+        color-mix(
+          in srgb,
+          var(--border) 58%,
+          transparent
+        );
+
+      border-radius:
+        max(
+          var(--radius-medium),
+          7px
+        );
+
+      background: var(--surface);
+      color: var(--text-secondary);
+
+      font-size: 0.82rem;
+    }
+
+    .demo-option.selected {
+      border-color: var(--accent);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--accent) 8%,
+          var(--surface)
+        );
+
+      color: var(--text);
+    }
+
+    .demo-indicator {
+      width: 15px;
+      height: 15px;
+
+      flex: 0 0 auto;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 50%;
+
+      background: var(--surface);
+    }
+
+    .demo-option.selected .demo-indicator {
+      border:
+        4px solid
+        var(--accent);
+    }
+
+    .demo-footer {
+      padding-top: 17px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+
+      border-top:
+        var(--border-width)
+        solid
+        color-mix(
+          in srgb,
+          var(--border) 55%,
+          transparent
+        );
+
+      color: var(--text-secondary);
+      font-size: 0.72rem;
+    }
+
+    .demo-next {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .button {
+      min-height: 48px;
+      padding: 13px 20px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+
+      border:
+        var(--border-width)
+        solid
+        var(--primary);
+
+      border-radius: var(--button-radius);
+
+      background: var(--primary);
+      color: var(--primary-contrast);
+
+      font-weight: 700;
+      text-decoration: none;
+
+      transition:
+        transform var(--transition),
+        background var(--transition),
+        color var(--transition);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button.secondary {
+      border-color: var(--border);
+      background: transparent;
+      color: var(--text);
+    }
+
+    .button[disabled],
+    .button[aria-disabled="true"] {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .question-shell,
+    .capture-shell,
+    .result-shell {
+      width:
+        min(
+          100%,
+          var(--question-width)
+        );
+
+      min-height:
+        calc(
+          100vh -
+          150px
+        );
+
+      margin: 0 auto;
+
+      padding:
+        clamp(
+          42px,
+          8vw,
+          88px
+        )
+        0;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .progress-wrap {
+      margin-bottom: 34px;
+    }
+
+    .progress-meta {
+      margin-bottom: 12px;
+
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+
+      color: var(--text-secondary);
+
+      font-size: 0.82rem;
+
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .progress-track {
+      height: 5px;
+
+      overflow: hidden;
+
+      background: var(--secondary);
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+
+      background: var(--accent);
+
+      transition:
+        width
+        var(--transition)
+        ease;
+    }
+
+    .progress-segments {
+      display: none;
+      gap: 7px;
+    }
+
+    .progress-segment {
+      height: 5px;
+      flex: 1;
+
+      background: var(--secondary);
+    }
+
+    .progress-segment.active,
+    .progress-segment.completed {
+      background: var(--accent);
+    }
+
+    .progress-segment.completed {
+      background: var(--primary);
+    }
+
+    .progress-segmented .progress-track {
+      display: none;
+    }
+
+    .progress-segmented .progress-segments {
+      display: flex;
+    }
+
+    .progress-minimal .progress-track,
+    .progress-minimal .progress-segments {
+      display: none;
+    }
+
+    .progress-position-sticky_top .progress-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+
+      padding: 16px 0;
+
+      background: var(--page-bg);
+    }
+
+    .card {
+      padding: var(--card-padding);
+
+      border-radius: var(--radius-large);
+
+      background: var(--surface);
+    }
+
+    .question-bordered .question-card {
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+    }
+
+    .question-elevated .question-card {
+      box-shadow:
+        0 18px 55px
+        rgba(21, 25, 34, 0.11);
+    }
+
+    .question-glass .question-card {
+      border:
+        var(--border-width)
+        solid
+        rgba(122, 131, 143, 0.5);
+
+      background:
+        rgba(255, 255, 255, 0.86);
+
+      backdrop-filter: blur(12px);
+
+      box-shadow:
+        0 18px 55px
+        rgba(21, 25, 34, 0.09);
+    }
+
+    .question-kicker {
+      margin: 0 0 12px;
+
+      color: var(--accent);
+
+      font-size: 0.8rem;
+      font-weight: 700;
+
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .question-help {
+      margin: -6px 0 24px;
+      color: var(--text-secondary);
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+
+      margin-top: 26px;
+    }
+
+    .option-label {
+      position: relative;
+
+      min-height: 54px;
+      padding: 14px 16px;
+
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+
+      border-radius: var(--radius-medium);
+
+      background: var(--surface);
+
+      transition:
+        border-color var(--transition),
+        background var(--transition),
+        transform var(--transition);
+    }
+
+    .option-label:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .option-label.selected {
+      border-color: var(--accent);
+      background: var(--surface-alt);
+    }
+
+    .option-label input {
+      width: 20px;
+      height: 20px;
+
+      flex: 0 0 auto;
+
+      accent-color: var(--accent);
+    }
+
+    .option-compact_button .options {
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
+    }
+
+    .validation {
+      min-height: 24px;
+      margin-top: 16px;
+
+      color: var(--danger);
+
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .navigation {
+      margin-top: 24px;
+
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .capture-header,
+    .result-header {
+      margin-bottom: 26px;
+    }
+
+    .form-fields {
+      display: grid;
+      gap: var(--field-gap);
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+    }
+
+    .field input {
+      width: 100%;
+      min-height: 50px;
+
+      padding: 12px 14px;
+
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+
+      border-radius: var(--radius-medium);
+
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .privacy-note {
+      margin: 16px 0 0;
+
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    .result-card {
+      border:
+        var(--border-width)
+        solid
+        var(--border);
+    }
+
+    .result-score {
+      margin-bottom: 18px;
+      padding: 7px 10px;
+
+      display: inline-flex;
+
+      background: var(--surface-alt);
+      color: var(--text-secondary);
+
+      font-size: 0.8rem;
+
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .result-summary {
+      color: var(--text-secondary);
+      font-size: 1.08rem;
+    }
+
+    .cta-panel {
+      margin-top: 28px;
+      padding: var(--card-padding);
+
+      border:
+        var(--border-width)
+        solid
+        var(--primary);
+
+      border-radius: var(--radius-large);
+
+      background: var(--primary);
+      color: var(--primary-contrast);
+    }
+
+    .cta-bordered_panel .cta-panel {
+      border-color: var(--border);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .cta-minimal .cta-panel {
+      padding-left: 0;
+      padding-right: 0;
+
+      border: 0;
+
+      background: transparent;
+      color: var(--text);
+    }
+
+    .cta-panel p {
+      opacity: 0.82;
+    }
+
+    .result-actions {
+      margin-top: 20px;
+
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .site-footer {
+      width: min(
+        calc(
+          100% -
+          (var(--page-padding) * 2)
+        ),
+        var(--max-width)
+      );
+
+      min-height: 70px;
+      margin: 0 auto;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+
+      border-top:
+        var(--border-width)
+        solid
+        var(--border);
+
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 100;
+
+      max-width:
+        min(
+          90vw,
+          520px
+        );
+
+      padding: 13px 18px;
+
+      background: var(--primary);
+      color: var(--primary-contrast);
+
+      transform:
+        translate(
+          -50%,
+          150%
+        );
+
+      opacity: 0;
+
+      transition:
+        transform var(--transition),
+        opacity var(--transition);
+    }
+
+    .toast.visible {
+      transform:
+        translate(
+          -50%,
+          0
+        );
+
+      opacity: 1;
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 42px;
+      }
+
+      .hero-visual {
+        min-height: auto;
+      }
+
+      h1 {
+        max-width: 16ch;
+
+        font-size:
+          clamp(
+            2.45rem,
+            11vw,
+            4rem
+          );
+      }
+
+      .demo-frame {
+        min-height: 470px;
+      }
+
+      .option-compact_button .options {
+        grid-template-columns: 1fr;
+      }
+
+      .navigation {
+        flex-direction: column-reverse;
+      }
+
+      .navigation .button {
+        width: 100%;
+      }
+
+      .site-footer {
+        padding: 22px 0;
+
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="header-bordered hero-split hero-component-split_visual progress-segmented question-bordered option-selectable_card cta-bordered_panel visual-data_grid progress-position-top">
+  <a
+    class="skip-link"
+    href="#main-content"
+  >
+    Aller au contenu
+  </a>
+
+  <header class="site-header">
+    <div class="wordmark">
+      LEVIATAN
+    </div>
+
+    <div class="preview-badge">
+      Prototype interactif
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section
+      id="landing-screen"
+      class="screen active"
+      aria-labelledby="landing-title"
+    >
+      <div class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            Diagnostic IA
+          </p>
+
+          <h1 id="landing-title">
+            Votre projet d’IA est-il prêt à passer du prototype à la production ?
+          </h1>
+
+          <p class="hero-description">
+            Répondez à quelques questions pour obtenir une évaluation personnalisée de votre maturité technique.
+          </p>
+
+          <button
+            id="start-button"
+            class="button"
+            type="button"
+          >
+            Commencer le diagnostic
+
+            <span aria-hidden="true">
+              →
+            </span>
+          </button>
+
+          <div class="hero-meta">
+            <span>
+              4 questions
+            </span>
+
+            <span>
+              ≈ 5 minutes
+            </span>
+
+            <span>
+              3 profils personnalisés
+            </span>
+          </div>
+        </div>
+
+        <div
+          class="hero-visual"
+          aria-label="Aperçu du questionnaire"
+        >
+          <div class="demo-frame">
+            <div class="demo-topbar">
+              <span>
+                Aperçu du diagnostic
+              </span>
+
+              <span class="demo-progress">
+                1 / 4
+              </span>
+            </div>
+
+            <div class="demo-question">
+              <p class="demo-kicker">
+                Question 1
+              </p>
+
+              <h3>
+                À quel stade se trouve actuellement votre projet ?
+              </h3>
+
+              <div class="demo-options">
+                
+    <div class="demo-option">
+      <span
+        class="demo-indicator"
+        aria-hidden="true"
+      ></span>
+
+      <span>
+        Idée ou exploration
+      </span>
+    </div>
+  
+    <div class="demo-option selected">
+      <span
+        class="demo-indicator"
+        aria-hidden="true"
+      ></span>
+
+      <span>
+        Preuve de concept
+      </span>
+    </div>
+  
+    <div class="demo-option">
+      <span
+        class="demo-indicator"
+        aria-hidden="true"
+      ></span>
+
+      <span>
+        Prototype testé
+      </span>
+    </div>
+  
+    <div class="demo-option">
+      <span
+        class="demo-indicator"
+        aria-hidden="true"
+      ></span>
+
+      <span>
+        Solution déjà utilisée
+      </span>
+    </div>
+  
+              </div>
+            </div>
+
+            <div class="demo-footer">
+              <span>
+                3 profils de résultat
+              </span>
+
+              <span class="demo-next">
+                Continuer
+
+                <span aria-hidden="true">
+                  →
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="question-screen"
+      class="screen"
+      aria-labelledby="question-title"
+    >
+      <div class="question-shell">
+        <div
+          class="progress-wrap"
+          aria-label="Progression du questionnaire"
+        >
+          <div class="progress-meta">
+            <span id="progress-label">
+              Question 1
+            </span>
+
+            <span id="progress-percent">
+              0 %
+            </span>
+          </div>
+
+          <div
+            class="progress-track"
+            aria-hidden="true"
+          >
+            <div
+              id="progress-fill"
+              class="progress-fill"
+            ></div>
+          </div>
+
+          <div
+            id="progress-segments"
+            class="progress-segments"
+            aria-hidden="true"
+          ></div>
+        </div>
+
+        <article class="card question-card">
+          <p
+            id="question-kicker"
+            class="question-kicker"
+          ></p>
+
+          <h2 id="question-title"></h2>
+
+          <p
+            id="question-help"
+            class="question-help"
+          ></p>
+
+          <div
+            id="options"
+            class="options"
+          ></div>
+
+          <p
+            id="validation"
+            class="validation"
+            role="alert"
+            aria-live="polite"
+          ></p>
+        </article>
+
+        <div class="navigation">
+          <button
+            id="previous-button"
+            class="button secondary"
+            type="button"
+          >
+            ← Précédent
+          </button>
+
+          <button
+            id="next-button"
+            class="button"
+            type="button"
+          >
+            Continuer →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section
+      id="capture-screen"
+      class="screen"
+      aria-labelledby="capture-title"
+    >
+      <div class="capture-shell">
+        <div class="capture-header">
+          <p class="eyebrow">
+            Votre résultat est prêt
+          </p>
+
+          <h2 id="capture-title"></h2>
+
+          <p
+            id="capture-description"
+            class="hero-description"
+          ></p>
+        </div>
+
+        <form
+          id="lead-form"
+          class="card question-card"
+          novalidate
+        >
+          <div
+            id="form-fields"
+            class="form-fields"
+          ></div>
+
+          <p class="privacy-note">
+            Preview : aucune donnée saisie
+            n’est enregistrée ou envoyée.
+          </p>
+
+          <div class="navigation">
+            <button
+              id="capture-back-button"
+              class="button secondary"
+              type="button"
+            >
+              ← Retour
+            </button>
+
+            <button
+              id="capture-submit-button"
+              class="button"
+              type="submit"
+            ></button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section
+      id="result-screen"
+      class="screen"
+      aria-labelledby="result-title"
+    >
+      <div class="result-shell">
+        <div class="result-header">
+          <p class="eyebrow">
+            Votre diagnostic
+          </p>
+
+          <h2 id="result-title">
+            Résultat personnalisé
+          </h2>
+        </div>
+
+        <article class="card result-card">
+          <div
+            id="result-score"
+            class="result-score"
+          ></div>
+
+          <h3 id="profile-title"></h3>
+
+          <p
+            id="profile-summary"
+            class="result-summary"
+          ></p>
+        </article>
+
+        <aside class="cta-panel">
+          <h3 id="cta-title"></h3>
+
+          <p id="cta-description"></p>
+
+          <div class="result-actions">
+            <button
+              id="cta-button"
+              class="button"
+              type="button"
+            ></button>
+
+            <button
+              id="restart-button"
+              class="button secondary"
+              type="button"
+            >
+              Recommencer
+            </button>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>
+      LEVIATAN
+    </span>
+
+    <span>
+      Preview de démonstration —
+      aucune donnée collectée
+    </span>
+  </footer>
+
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+  <script>
+    "use strict";
+
+    const SPECIFICATION =
+      {"schema_version":1,"lead_magnet_id":"leviatan_ai_maturity_diagnostic_001","idea_id":"idea_1","format":"diagnostic","engine":"questionnaire","title":"Votre projet d’IA est-il prêt à être industrialisé ?","subtitle":"Évaluez en moins de 5 minutes la maturité technique de votre projet et identifiez vos priorités.","estimated_completion_minutes":5,"landing_page":{"eyebrow":"Diagnostic IA","headline":"Votre projet d’IA est-il prêt à passer du prototype à la production ?","description":"Répondez à quelques questions pour obtenir une évaluation personnalisée de votre maturité technique.","start_button_label":"Commencer le diagnostic"},"questions":[{"question_id":"q1","type":"single_choice","title":"À quel stade se trouve actuellement votre projet ?","required":true,"options":[{"option_id":"q1_a","label":"Idée ou exploration","score":1},{"option_id":"q1_b","label":"Preuve de concept","score":2},{"option_id":"q1_c","label":"Prototype testé","score":3},{"option_id":"q1_d","label":"Solution déjà utilisée","score":4}]},{"question_id":"q2","type":"single_choice","title":"Vos données sont-elles suffisamment structurées et accessibles ?","required":true,"options":[{"option_id":"q2_a","label":"Pas encore","score":1},{"option_id":"q2_b","label":"Partiellement","score":2},{"option_id":"q2_c","label":"Majoritairement","score":3},{"option_id":"q2_d","label":"Oui, avec une gouvernance définie","score":4}]},{"question_id":"q3","type":"multiple_choice","title":"Quels sont vos principaux obstacles ?","required":true,"options":[{"option_id":"q3_a","label":"Qualité ou accès aux données"},{"option_id":"q3_b","label":"Fiabilité des réponses"},{"option_id":"q3_c","label":"Sécurité et confidentialité"},{"option_id":"q3_d","label":"Intégration au système existant"},{"option_id":"q3_e","label":"Coûts ou performance"}]},{"question_id":"q4","type":"single_choice","title":"Disposez-vous d’indicateurs pour mesurer la qualité du système ?","required":true,"options":[{"option_id":"q4_a","label":"Aucun indicateur","score":1},{"option_id":"q4_b","label":"Quelques tests manuels","score":2},{"option_id":"q4_c","label":"Des métriques régulières","score":3},{"option_id":"q4_d","label":"Une évaluation automatisée complète","score":4}]}],"lead_capture":{"position":"before_full_result","headline":"Recevez votre diagnostic complet","description":"Indiquez vos coordonnées pour découvrir votre niveau de maturité et vos priorités.","fields":[{"field_id":"first_name","type":"text","label":"Prénom","required":true},{"field_id":"email","type":"email","label":"Email professionnel","required":true},{"field_id":"company","type":"text","label":"Entreprise","required":true}],"submit_label":"Afficher mon diagnostic"},"result_profiles":[{"profile_id":"exploration","title":"Projet en phase d’exploration","min_score":0,"max_score":4,"summary":"Votre projet nécessite encore une phase de cadrage avant son industrialisation."},{"profile_id":"prototype","title":"Prototype à consolider","min_score":5,"max_score":8,"summary":"Les fondations existent, mais plusieurs éléments doivent être fiabilisés avant le passage en production."},{"profile_id":"ready","title":"Projet proche de l’industrialisation","min_score":9,"max_score":16,"summary":"Votre projet dispose de bases solides pour préparer son industrialisation."}],"cta":{"headline":"Validez les prochaines étapes de votre projet","description":"Échangez avec un expert Leviatan pour approfondir les priorités identifiées.","label":"Prendre rendez-vous","url":""}};
+
+    const THEME =
+      {"schema_version":1,"theme_id":"leviatan_ai_maturity_diagnostic_001_theme_v1","theme_version":1,"theme_name":"Seuil de production","theme_summary":"Un diagnostic sobre et précis, où une grille technique et un bleu ardoise rythment le passage du prototype à la production.","creative_direction":{"concept":"Une grille de calibration qui passe de repères espacés à une trame régulière, pour évoquer la mise en production.","tone":["sobre","précis","rassurant"],"keywords":["calibration","grille","monochrome","industrialisation"],"questionnaire_adaptation":"Une question à la fois et une progression segmentée rendent le parcours court facile à suivre. Les cartes de réponse laissent de la place aux libellés longs, et le résultat met le profil de maturité au premier plan plutôt que le score."},"brand_alignment":{"brand_name":"LEVIATAN","brand_profile_used":true,"brand_confidence":0.85,"preserved_elements":["Base monochrome à fort contraste","Composition rectiligne","Contours fins","Titres sans empattement","Espaces généreux"],"adaptations":["Le bleu ardoise est utilisé comme accent propre au diagnostic.","Une grille décorative remplace la photographie du site.","Le nom LEVIATAN apparaît en texte sans imitation du logotype."]},"assets":{"logo_mode":"text_wordmark","logo_text":"LEVIATAN","logo_asset_reference":"","hero_visual":"data_grid","decorative_style":"Grille de calibration composée de traits fins et de repères géométriques."},"colors":{"page_background":"#FFFFFF","surface":"#FFFFFF","surface_alternative":"#F3F5F7","text_primary":"#151922","text_secondary":"#495463","primary":"#191B20","primary_contrast":"#FFFFFF","secondary":"#E5E5E5","accent":"#36516D","border":"#7A838F","focus":"#0064CA","success":"#176647","warning":"#805300","danger":"#A42622"},"typography":{"heading_font_stack":"\"Arial Narrow\", \"Liberation Sans Narrow\", Arial, sans-serif","body_font_stack":"system-ui, -apple-system, \"Segoe UI\", Arial, sans-serif","heading_weight":600,"body_weight":400,"base_size_px":17,"heading_letter_spacing_em":0.015,"body_letter_spacing_em":0,"heading_line_height":1.2,"body_line_height":1.55,"heading_text_transform":"none"},"shape":{"border_width_px":1,"radius_small_px":0,"radius_medium_px":2,"radius_large_px":2,"button_radius_px":0},"spacing":{"base_unit_px":8,"page_padding_px":24,"section_gap_px":64,"card_padding_px":24,"field_gap_px":16},"layout":{"max_width_px":1200,"content_width_px":1040,"question_width_px":680,"hero_alignment":"split","question_flow":"one_at_a_time","progress_position":"top","result_layout":"profile_focused","mobile_breakpoint_px":768},"components":{"header":"bordered","hero":"split_visual","progress":"segmented","question_card":"bordered","answer_option":"selectable_card","lead_capture":"panel","result_card":"profile_card","cta":"bordered_panel","footer":"minimal"},"interaction":{"option_selection":"indicator","transition_duration_ms":140,"hover_intensity":"subtle","focus_ring_width_px":3,"reduced_motion_supported":true},"accessibility":{"target":"WCAG_AA","minimum_text_contrast":4.5,"minimum_large_text_contrast":3,"minimum_touch_target_px":44,"visible_focus_required":true}};
+
+    const questions =
+      Array.isArray(SPECIFICATION.questions)
+        ? SPECIFICATION.questions
+        : [];
+
+    const profiles =
+      Array.isArray(SPECIFICATION.result_profiles)
+        ? SPECIFICATION.result_profiles
+        : [];
+
+    const answers = {};
+
+    let currentQuestionIndex = 0;
+
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function showScreen(id) {
+      document
+        .querySelectorAll(".screen")
+        .forEach(function(screen) {
+          screen.classList.toggle(
+            "active",
+            screen.id === id
+          );
+        });
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+      const heading =
+        document.querySelector(
+          "#" + id + " h1, #" + id + " h2"
+        );
+
+      if (heading) {
+        heading.setAttribute(
+          "tabindex",
+          "-1"
+        );
+
+        heading.focus({
+          preventScroll: true
+        });
+      }
+    }
+
+    function showToast(message) {
+      const toast = byId("toast");
+
+      toast.textContent = message;
+      toast.classList.add("visible");
+
+      window.setTimeout(function() {
+        toast.classList.remove("visible");
+      }, 3200);
+    }
+
+    function updateProgress() {
+      const total =
+        Math.max(
+          questions.length,
+          1
+        );
+
+      const current =
+        currentQuestionIndex + 1;
+
+      const percent =
+        Math.round(
+          (current / total) * 100
+        );
+
+      byId("progress-label").textContent =
+        "Question " +
+        current +
+        " sur " +
+        total;
+
+      byId("progress-percent").textContent =
+        percent + " %";
+
+      byId("progress-fill").style.width =
+        percent + "%";
+
+      const segments =
+        byId("progress-segments");
+
+      segments.replaceChildren();
+
+      questions.forEach(function(_, index) {
+        const segment =
+          document.createElement("span");
+
+        segment.className =
+          "progress-segment";
+
+        if (index < currentQuestionIndex) {
+          segment.classList.add("completed");
+        }
+
+        if (index === currentQuestionIndex) {
+          segment.classList.add("active");
+        }
+
+        segments.appendChild(segment);
+      });
+    }
+
+    function answerFor(question) {
+      return answers[
+        question.question_id
+      ];
+    }
+
+    function renderQuestion() {
+      const question =
+        questions[currentQuestionIndex];
+
+      if (!question) {
+        return;
+      }
+
+      updateProgress();
+
+      byId("question-kicker").textContent =
+        question.type === "multiple_choice"
+          ? "Sélection multiple"
+          : "Sélection unique";
+
+      byId("question-title").textContent =
+        question.title ||
+        "Question";
+
+      byId("question-help").textContent =
+        question.type === "multiple_choice"
+          ? "Vous pouvez sélectionner plusieurs réponses."
+          : "Sélectionnez la réponse la plus proche de votre situation.";
+
+      byId("validation").textContent = "";
+
+      byId("previous-button").disabled =
+        currentQuestionIndex === 0;
+
+      byId("next-button").textContent =
+        currentQuestionIndex ===
+        questions.length - 1
+          ? "Voir la suite →"
+          : "Continuer →";
+
+      const optionsContainer =
+        byId("options");
+
+      optionsContainer.replaceChildren();
+
+      const options =
+        Array.isArray(question.options)
+          ? question.options
+          : [];
+
+      const existingAnswer =
+        answerFor(question);
+
+      options.forEach(function(
+        option,
+        optionIndex
+      ) {
+        const label =
+          document.createElement("label");
+
+        label.className =
+          "option-label";
+
+        const inputElement =
+          document.createElement("input");
+
+        inputElement.type =
+          question.type === "multiple_choice"
+            ? "checkbox"
+            : "radio";
+
+        inputElement.name =
+          "question-" +
+          question.question_id;
+
+        inputElement.value =
+          option.option_id ||
+          String(optionIndex);
+
+        if (
+          question.type ===
+          "multiple_choice"
+        ) {
+          inputElement.checked =
+            Array.isArray(existingAnswer)
+              ? existingAnswer.includes(
+                  inputElement.value
+                )
+              : false;
+        } else {
+          inputElement.checked =
+            existingAnswer ===
+            inputElement.value;
+        }
+
+        label.classList.toggle(
+          "selected",
+          inputElement.checked
+        );
+
+        const text =
+          document.createElement("span");
+
+        text.textContent =
+          option.label ||
+          "Réponse";
+
+        inputElement.addEventListener(
+          "change",
+          function() {
+            if (
+              question.type ===
+              "multiple_choice"
+            ) {
+              answers[
+                question.question_id
+              ] = Array.from(
+                optionsContainer.querySelectorAll(
+                  "input:checked"
+                )
+              ).map(function(inputItem) {
+                return inputItem.value;
+              });
+            } else {
+              answers[
+                question.question_id
+              ] = inputElement.value;
+            }
+
+            optionsContainer
+              .querySelectorAll(
+                ".option-label"
+              )
+              .forEach(function(
+                optionLabel
+              ) {
+                const optionInput =
+                  optionLabel.querySelector(
+                    "input"
+                  );
+
+                optionLabel.classList.toggle(
+                  "selected",
+                  Boolean(
+                    optionInput &&
+                    optionInput.checked
+                  )
+                );
+              });
+
+            byId("validation").textContent = "";
+          }
+        );
+
+        label.appendChild(inputElement);
+        label.appendChild(text);
+
+        optionsContainer.appendChild(label);
+      });
+    }
+
+    function currentAnswerIsValid() {
+      const question =
+        questions[currentQuestionIndex];
+
+      if (
+        !question ||
+        !question.required
+      ) {
+        return true;
+      }
+
+      const answer =
+        answerFor(question);
+
+      if (Array.isArray(answer)) {
+        return answer.length > 0;
+      }
+
+      return Boolean(answer);
+    }
+
+    function renderCapture() {
+      const capture =
+        SPECIFICATION.lead_capture || {};
+
+      byId("capture-title").textContent =
+        capture.headline ||
+        "Recevez votre résultat complet";
+
+      byId(
+        "capture-description"
+      ).textContent =
+        capture.description ||
+        "Complétez ces informations pour afficher votre résultat.";
+
+      byId(
+        "capture-submit-button"
+      ).textContent =
+        capture.submit_label ||
+        "Afficher mon résultat";
+
+      const fieldsContainer =
+        byId("form-fields");
+
+      fieldsContainer.replaceChildren();
+
+      const fields =
+        Array.isArray(capture.fields)
+          ? capture.fields
+          : [];
+
+      fields.forEach(function(
+        field,
+        index
+      ) {
+        const wrapper =
+          document.createElement("div");
+
+        wrapper.className = "field";
+
+        const label =
+          document.createElement("label");
+
+        const inputId =
+          "lead-field-" +
+          (
+            field.field_id ||
+            index
+          );
+
+        label.setAttribute(
+          "for",
+          inputId
+        );
+
+        label.textContent =
+          field.label ||
+          "Information";
+
+        const fieldInput =
+          document.createElement("input");
+
+        fieldInput.id = inputId;
+
+        fieldInput.name =
+          field.field_id ||
+          "field_" + index;
+
+        fieldInput.type =
+          field.type === "email"
+            ? "email"
+            : "text";
+
+        fieldInput.required =
+          Boolean(field.required);
+
+        fieldInput.autocomplete =
+          field.type === "email"
+            ? "email"
+            : "off";
+
+        wrapper.appendChild(label);
+        wrapper.appendChild(fieldInput);
+
+        fieldsContainer.appendChild(
+          wrapper
+        );
+      });
+    }
+
+    function calculateScore() {
+      return questions.reduce(
+        function(total, question) {
+          const selected =
+            answers[
+              question.question_id
+            ];
+
+          const selectedIds =
+            Array.isArray(selected)
+              ? selected
+              : [selected];
+
+          const options =
+            Array.isArray(
+              question.options
+            )
+              ? question.options
+              : [];
+
+          const questionScore =
+            options.reduce(
+              function(
+                score,
+                option,
+                index
+              ) {
+                const optionId =
+                  option.option_id ||
+                  String(index);
+
+                if (
+                  !selectedIds.includes(
+                    optionId
+                  )
+                ) {
+                  return score;
+                }
+
+                const optionScore =
+                  Number(option.score);
+
+                return (
+                  score +
+                  (
+                    Number.isFinite(
+                      optionScore
+                    )
+                      ? optionScore
+                      : 0
+                  )
+                );
+              },
+              0
+            );
+
+          return total + questionScore;
+        },
+        0
+      );
+    }
+
+    function profileForScore(score) {
+      const exactProfile =
+        profiles.find(
+          function(profile) {
+            const minimum =
+              Number(
+                profile.min_score
+              );
+
+            const maximum =
+              Number(
+                profile.max_score
+              );
+
+            return (
+              Number.isFinite(minimum) &&
+              Number.isFinite(maximum) &&
+              score >= minimum &&
+              score <= maximum
+            );
+          }
+        );
+
+      if (exactProfile) {
+        return exactProfile;
+      }
+
+      if (profiles.length > 0) {
+        return profiles[
+          profiles.length - 1
+        ];
+      }
+
+      return {
+        title: "Diagnostic terminé",
+        summary:
+          "Votre résultat est prêt à être analysé."
+      };
+    }
+
+    function renderResult() {
+      const score =
+        calculateScore();
+
+      const profile =
+        profileForScore(score);
+
+      const callToAction =
+        SPECIFICATION.cta || {};
+
+      byId(
+        "result-score"
+      ).textContent =
+        "Score de maturité : " +
+        score;
+
+      byId(
+        "profile-title"
+      ).textContent =
+        profile.title ||
+        "Votre profil";
+
+      byId(
+        "profile-summary"
+      ).textContent =
+        profile.summary ||
+        "Votre diagnostic est terminé.";
+
+      byId(
+        "cta-title"
+      ).textContent =
+        callToAction.headline ||
+        "Passez à l’étape suivante";
+
+      byId(
+        "cta-description"
+      ).textContent =
+        callToAction.description ||
+        "Approfondissez votre résultat avec un expert.";
+
+      byId(
+        "cta-button"
+      ).textContent =
+        callToAction.label ||
+        "Continuer";
+    }
+
+    byId(
+      "start-button"
+    ).addEventListener(
+      "click",
+      function() {
+        currentQuestionIndex = 0;
+
+        renderQuestion();
+
+        showScreen(
+          "question-screen"
+        );
+      }
+    );
+
+    byId(
+      "previous-button"
+    ).addEventListener(
+      "click",
+      function() {
+        if (
+          currentQuestionIndex <= 0
+        ) {
+          return;
+        }
+
+        currentQuestionIndex -= 1;
+
+        renderQuestion();
+      }
+    );
+
+    byId(
+      "next-button"
+    ).addEventListener(
+      "click",
+      function() {
+        if (
+          !currentAnswerIsValid()
+        ) {
+          byId(
+            "validation"
+          ).textContent =
+            "Sélectionnez au moins une réponse pour continuer.";
+
+          return;
+        }
+
+        if (
+          currentQuestionIndex <
+          questions.length - 1
+        ) {
+          currentQuestionIndex += 1;
+
+          renderQuestion();
+
+          return;
+        }
+
+        const captureFields =
+          Array.isArray(
+            SPECIFICATION
+              .lead_capture
+              ?.fields
+          )
+            ? SPECIFICATION
+                .lead_capture
+                .fields
+            : [];
+
+        if (
+          captureFields.length > 0
+        ) {
+          renderCapture();
+
+          showScreen(
+            "capture-screen"
+          );
+        } else {
+          renderResult();
+
+          showScreen(
+            "result-screen"
+          );
+        }
+      }
+    );
+
+    byId(
+      "capture-back-button"
+    ).addEventListener(
+      "click",
+      function() {
+        currentQuestionIndex =
+          Math.max(
+            questions.length - 1,
+            0
+          );
+
+        renderQuestion();
+
+        showScreen(
+          "question-screen"
+        );
+      }
+    );
+
+    byId(
+      "lead-form"
+    ).addEventListener(
+      "submit",
+      function(event) {
+        event.preventDefault();
+
+        if (
+          !event.currentTarget
+            .checkValidity()
+        ) {
+          event.currentTarget
+            .reportValidity();
+
+          return;
+        }
+
+        renderResult();
+
+        showScreen(
+          "result-screen"
+        );
+      }
+    );
+
+    byId(
+      "cta-button"
+    ).addEventListener(
+      "click",
+      function() {
+        const url =
+          String(
+            SPECIFICATION
+              .cta
+              ?.url ||
+            ""
+          ).trim();
+
+        if (
+          /^https?:///i.test(url)
+        ) {
+          window.open(
+            url,
+            "_blank",
+            "noopener,noreferrer"
+          );
+
+          return;
+        }
+
+        showToast(
+          "Le lien du CTA sera configuré avant la publication."
+        );
+      }
+    );
+
+    byId(
+      "restart-button"
+    ).addEventListener(
+      "click",
+      function() {
+        Object
+          .keys(answers)
+          .forEach(function(key) {
+            delete answers[key];
+          });
+
+        currentQuestionIndex = 0;
+
+        byId(
+          "lead-form"
+        ).reset();
+
+        showScreen(
+          "landing-screen"
+        );
+      }
+    );
+  </script>
+</body>
+</html>
