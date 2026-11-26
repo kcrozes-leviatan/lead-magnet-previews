@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#151A1E">
+<title>Leviatan — Diagnostic de maturité IA générative</title>
+<style>
+:root{--bg:#F3F5F7;--white:#fff;--alt:#E8EDF2;--ink:#151A1E;--muted:#495560;--accent:#36576E;--line:#687785;--soft:#CDD5DC;--focus:#2C71B8;--green:#17613B;--warning:#754B08;--danger:#A12825;--heading:"Arial Narrow","Roboto Condensed",Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Segoe UI",Arial,sans-serif}
+button,input{font:inherit}
+button,a,input,label{ -webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+button:disabled{cursor:default}
+:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
+[hidden]{display:none!important}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--heading);font-weight:500;line-height:1.16;letter-spacing:-.015em}
+h1{font-size:52px}h2{font-size:32px}h3{font-size:22px}
+a{color:var(--accent)}
+.wrap{max-width:1248px;margin:auto;padding:0 24px}
+.header{background:var(--white);border-bottom:1px solid var(--line)}
+.header-inner{min-height:88px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand-block{display:flex;align-items:center;gap:28px}
+.wordmark{font-size:25px;font-weight:750;letter-spacing:.11em;line-height:1}
+.header-label{border-left:1px solid var(--soft);padding-left:28px;color:var(--muted);font-size:12px;line-height:1.5}
+.header-actions{display:flex;gap:20px;align-items:center}
+.preview{font-size:11px;letter-spacing:.08em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.preview::before{content:"";width:7px;height:7px;border:1px solid var(--accent);background:var(--alt)}
+.text-button{border:0;border-bottom:1px solid var(--line);border-radius:0;background:none;padding:10px 0;color:var(--muted);font-size:13px;min-height:44px}
+.main{min-height:calc(100vh - 190px)}
+.screen{animation:appear .14s ease-out}
+@keyframes appear{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:650;color:var(--accent)}
+.eyebrow::before{content:"";display:inline-block;width:18px;height:2px;background:currentColor;margin:0 10px 3px 0}
+.landing{padding-top:40px;padding-bottom:56px}
+.document-line{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--soft)}
+.document-note{font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.hero{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:64px;align-items:center;padding:46px 0 40px}
+.hero h1{max-width:670px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero-sub{font-size:18px;color:var(--muted);line-height:1.6;max-width:620px;margin-top:24px}
+.hero-action{margin-top:32px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.button{border:1px solid var(--ink);border-radius:4px;background:var(--ink);color:var(--white);min-height:48px;padding:13px 20px;display:inline-flex;gap:24px;align-items:center;justify-content:center;font-size:14px;font-weight:600;text-decoration:none;transition:background .14s,border-color .14s}
+.button:hover{background:#2B343D;border-color:#2B343D}
+.button .arrow{font-size:21px;font-weight:400;line-height:1}
+.button.secondary{background:transparent;color:var(--ink);border-color:var(--line)}
+.button.secondary:hover{background:var(--alt)}
+.time-note{font-size:12px;color:var(--muted);line-height:1.65}
+.time-note strong{color:var(--ink);font-weight:600}
+.review-visual{border:1px solid var(--line);background:var(--alt);position:relative}
+.visual-top{background:var(--ink);color:white;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.07em}
+.visual-top span:last-child{color:#CCD6DE}
+.matrix{display:grid;grid-template-columns:1fr 1fr;background-image:linear-gradient(to right,#d8e0e7 1px,transparent 1px),linear-gradient(to bottom,#d8e0e7 1px,transparent 1px);background-size:24px 24px}
+.quadrant{height:156px;padding:18px;position:relative}
+.quadrant:nth-child(odd){border-right:1px solid var(--line)}
+.quadrant:nth-child(-n+2){border-bottom:1px solid var(--line)}
+.quad-num{font:11px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent)}
+.quad-name{position:absolute;bottom:16px;left:18px;font-size:12px;font-weight:600;line-height:1.4;color:var(--accent)}
+.glyph{position:absolute;right:23px;top:30px;width:46px;height:46px;color:var(--accent)}
+.glyph.frame{border:1px solid currentColor;outline:1px solid currentColor;outline-offset:-9px}
+.glyph.frame::before,.glyph.frame::after{content:"";position:absolute;background:currentColor}
+.glyph.frame::before{height:1px;width:64px;left:-10px;top:22px}
+.glyph.frame::after{width:1px;height:64px;left:22px;top:-10px}
+.glyph.stack{border:1px solid currentColor;box-shadow:6px 6px 0 -1px var(--alt),6px 6px 0 0 currentColor,12px 12px 0 -1px var(--alt),12px 12px 0 0 currentColor;width:34px;height:34px}
+.glyph.shield{border:1px solid currentColor;border-radius:0 0 20px 20px;width:38px;height:44px}
+.glyph.shield::after{content:"+";position:absolute;inset:0;text-align:center;font:32px/36px monospace}
+.glyph.connect{border:1px solid currentColor;height:24px;top:40px}
+.glyph.connect::before,.glyph.connect::after{content:"";position:absolute;width:12px;height:12px;background:var(--alt);border:1px solid currentColor;top:5px}
+.glyph.connect::before{left:-7px}.glyph.connect::after{right:-7px}
+.visual-bottom{padding:12px 18px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.benefits{border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);background:var(--white)}
+.benefit{padding:24px;display:flex;gap:18px}
+.benefit+.benefit{border-left:1px solid var(--soft)}
+.index{color:var(--accent);font:12px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace}
+.benefit h2{font-size:19px;margin-bottom:9px}
+.benefit p{font-size:13px;line-height:1.7;color:var(--muted)}
+.intro-note{display:grid;grid-template-columns:200px 1fr;gap:24px;margin-top:30px}
+.intro-note h2{font-size:13px;line-height:1.7;font-family:inherit;font-weight:600;letter-spacing:0}
+.intro-note p{font-size:13px;color:var(--muted);max-width:850px}
+.footer{border-top:1px solid var(--soft);padding:22px 0;color:var(--muted)}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;font-size:11px}
+.footer-brand{font-weight:600;letter-spacing:.07em;white-space:nowrap}
+.privacy{display:flex;align-items:center;gap:10px}
+.privacy svg{flex-shrink:0}
+.flow{padding-top:32px;padding-bottom:48px;max-width:1048px}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-bottom:10px}
+.progress-meta strong{color:var(--ink);font-weight:600}
+.segments{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+.segment{height:5px;background:#D8E1E9;position:relative}
+.segment.done{background:var(--accent)}
+.segment.current{background:var(--ink)}
+.segment.current::after{content:"";position:absolute;left:0;right:0;bottom:-4px;border-bottom:1px solid var(--ink)}
+.question-layout{display:grid;grid-template-columns:216px minmax(0,1fr);gap:48px;margin-top:38px;align-items:start}
+.sidebar{padding-top:6px}
+.sidebar-title{margin-bottom:22px;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.dimension-nav{margin:0;padding:0;list-style:none}
+.dimension-nav li{padding:16px 0;border-top:1px solid var(--soft);display:flex;gap:12px;align-items:baseline;color:var(--muted);font-size:13px}
+.dimension-nav li.active{color:var(--ink);font-weight:650}
+.dimension-nav li.active .dimension-number{background:var(--ink);color:white;border-color:var(--ink)}
+.dimension-nav li.complete .dimension-number{color:var(--green);border-color:var(--green)}
+.dimension-number{border:1px solid var(--soft);font:10px/24px ui-monospace,SFMono-Regular,Consolas,monospace;min-width:26px;text-align:center}
+.sidebar-note{border-top:1px solid var(--soft);padding-top:22px;font-size:12px;color:var(--muted);margin-top:4px}
+.question-card{background:var(--white);border:1px solid var(--line);border-radius:4px;padding:30px}
+.question-heading{font-size:30px;margin:16px 0}
+.question-help{font-size:12px;color:var(--muted);margin-bottom:24px}
+fieldset{padding:0;margin:0;border:0;min-width:0}
+.options{display:grid;gap:12px}
+.option{display:flex;align-items:flex-start;gap:14px;border:1px solid var(--soft);border-radius:2px;padding:16px;cursor:pointer;font-size:14px;line-height:1.6;transition:background .14s,border-color .14s;min-height:58px}
+.option:hover{background:#F7F9FA;border-color:var(--line)}
+.option.selected{background:var(--alt);border-color:var(--accent);box-shadow:inset 3px 0 var(--accent)}
+.option:focus-within{outline:3px solid var(--focus);outline-offset:3px}
+.option input{margin:4px 0 0;flex:0 0 18px;width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
+.option input:focus-visible{outline:none}
+.option-key{font:10px/22px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);margin-left:auto;padding-left:8px}
+.question-controls{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:24px;margin-top:24px;border-top:1px solid var(--soft)}
+.question-controls .secondary{font-weight:400}
+.error{color:var(--danger);font-size:13px;margin-top:14px}
+.micro-note{font-size:11px;color:var(--muted);margin-top:16px;text-align:center}
+.capture{max-width:1048px;padding-top:38px;padding-bottom:56px}
+.complete-line{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:36px;font-size:12px;color:var(--muted)}
+.complete-label{color:var(--green);display:flex;align-items:center;gap:10px}
+.check{display:inline-grid;place-items:center;width:23px;height:23px;border:1px solid var(--green);font-size:12px}
+.capture-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:start}
+.capture h1{font-size:40px;margin:16px 0 20px}
+.capture-description{font-size:14px;color:var(--muted)}
+.report-contents{margin-top:32px;border-top:1px solid var(--soft)}
+.report-row{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--soft);font-size:13px}
+.capture-panel{padding:30px;border:1px solid var(--line);border-radius:4px;background:var(--white)}
+.panel-kicker{font-size:12px;color:var(--muted);margin-bottom:24px}
+.field{margin-bottom:20px}
+.field label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}
+.optional{font-weight:400;color:var(--muted);font-size:11px}
+.field input{display:block;width:100%;height:48px;border:1px solid var(--line);border-radius:2px;padding:10px 12px;color:var(--ink);background:var(--white)}
+.field input:focus{border-color:var(--focus)}
+.full{width:100%}
+.consent{font-size:12px;color:var(--muted);margin-top:18px}
+.capture-back{margin-top:16px}
+.result{max-width:1048px;padding-top:34px;padding-bottom:56px}
+.result-top{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:28px}
+.result-top p{font-size:12px;color:var(--muted)}
+.score-overview{display:grid;grid-template-columns:240px 1fr;border:1px solid var(--line);background:var(--white);border-radius:4px;overflow:hidden}
+.score-block{padding:28px;background:var(--ink);color:white;display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.score-block .eyebrow{color:#CAD7E1}
+.score-value{font-family:var(--heading);font-size:78px;line-height:1}
+.score-value small{font:16px system-ui,sans-serif;color:#CAD7E1;margin-left:6px}
+.score-scale{display:flex;gap:4px;margin-top:14px}
+.score-scale span{height:4px;flex:1;background:#53606A}
+.score-scale span.lit{background:#D8E1E9}
+.score-label{font-size:13px;line-height:1.5}
+.result-summary{padding:30px}
+.profile-label{display:inline-block;padding:5px 9px;font-size:11px;background:var(--alt);color:var(--accent);border:1px solid var(--soft);margin-bottom:16px}
+.result-summary h1{font-size:34px;margin-bottom:18px}
+.result-summary p{font-size:14px;color:var(--muted)}
+.section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:32px 0 18px}
+.section-heading h2{font-size:24px}
+.section-heading p{font-size:11px;color:var(--muted)}
+.dimension-results{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:4px;background:white}
+.dimension-result{padding:20px;min-width:0}
+.dimension-result+.dimension-result{border-left:1px solid var(--soft)}
+.dimension-result h3{font:600 13px/1.5 system-ui,sans-serif;min-height:40px;letter-spacing:0}
+.dimension-value{font:32px/1.2 var(--heading);margin:16px 0 10px}
+.dimension-value small{font:12px system-ui,sans-serif;color:var(--muted)}
+.meter{height:4px;background:var(--alt)}
+.meter span{display:block;height:100%;background:var(--accent)}
+.dimension-result p{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6}
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:30px 0}
+.analysis-column{padding-top:20px;border-top:1px solid var(--line)}
+.analysis-column h2{font-size:21px;display:flex;gap:10px;align-items:center}
+.analysis-dot{height:7px;width:7px;display:inline-block;background:var(--green)}
+.analysis-dot.warning{background:var(--warning)}
+.analysis-column ul{padding-left:18px;margin:16px 0 0}
+.analysis-column li{font-size:13px;color:var(--muted);padding:0 0 12px 4px}
+.priority-note{font-size:13px;color:var(--muted);padding:15px 18px;border-left:3px solid var(--accent);background:var(--alt);margin-bottom:18px}
+.recommendations{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.recommendations li{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:18px 8px;border-bottom:1px solid var(--soft);font-size:14px}
+.result-cta{margin-top:36px;background:var(--ink);padding:28px 30px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:28px;border-radius:4px;color:white}
+.result-cta h2{font-size:23px;margin-bottom:12px}
+.result-cta p{color:#D8E1E9;font-size:13px;max-width:560px}
+.result-cta .button{background:white;color:var(--ink);border-color:white;gap:12px}
+.result-cta .button:hover{background:var(--alt)}
+.cta-note{color:#D8E1E9;font-size:10px;text-align:center;margin-top:10px;max-width:265px}
+.result-disclaimer{font-size:11px;color:var(--muted);margin-top:22px}
+.result-end{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-top:22px}
+.result-end p{font-size:11px;color:var(--muted)}
+dialog{max-width:480px;width:calc(100% - 40px);padding:30px;border:1px solid var(--line);border-radius:4px;color:var(--ink);background:white}
+dialog::backdrop{background:rgba(21,26,30,.55)}
+dialog h2{font-size:26px;margin-bottom:16px}
+dialog p{font-size:14px;color:var(--muted)}
+.dialog-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:24px;flex-wrap:wrap}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(min-width:1400px){.landing{padding-top:48px}.hero{padding-top:54px;padding-bottom:48px;gap:80px}.hero h1{font-size:57px}}
+@media(max-width:1000px){.hero{gap:32px;grid-template-columns:1.4fr 1fr}.hero h1{font-size:43px}.quadrant{padding:14px;height:144px}.quad-name{left:14px;font-size:11px}.glyph{right:18px}.question-layout{grid-template-columns:180px minmax(0,1fr);gap:24px}.question-card{padding:24px}.capture-grid{gap:32px}.result-cta{grid-template-columns:1fr}.result-cta>div:last-child{justify-self:start}.dimension-result{padding:16px}}
+@media(max-width:768px){.wrap{padding-left:20px;padding-right:20px}.header-inner{min-height:76px;gap:12px}.wordmark{font-size:21px}.header-label{display:none}.header-actions{gap:12px}.preview{font-size:9px;letter-spacing:.03em}.header-actions .text-button{font-size:11px}.landing{padding-top:26px;padding-bottom:32px}.document-line{padding-bottom:18px}.document-note{font-size:9px}.eyebrow{font-size:10px}.hero{grid-template-columns:1fr;gap:32px;padding:30px 0}.hero h1{font-size:41px}.hero-sub{font-size:16px;margin-top:20px}.hero-action{margin-top:24px;gap:16px}.review-visual{max-width:100%;width:100%}.quadrant{height:125px}.glyph{right:24px;top:22px}.glyph.connect{top:32px}.benefits{grid-template-columns:1fr}.benefit{padding:20px}.benefit+.benefit{border-left:0;border-top:1px solid var(--soft)}.benefit h2{font-size:19px}.intro-note{grid-template-columns:1fr;gap:8px;margin-top:24px}.footer-inner{align-items:flex-start;flex-direction:column;gap:12px}.flow{padding-top:24px;padding-bottom:32px}.question-layout{grid-template-columns:1fr;gap:0;margin-top:28px}.sidebar{display:none}.question-card{padding:23px 20px}.question-heading{font-size:27px}.option{padding:14px 12px;font-size:14px;gap:11px}.option-key{display:none}.question-controls{gap:12px}.question-controls .button{padding:12px 16px;gap:12px}.capture{padding-top:28px;padding-bottom:32px}.complete-line{margin-bottom:28px}.capture-grid{grid-template-columns:1fr;gap:28px}.capture h1{font-size:35px}.report-contents{margin-top:22px}.report-row{padding:12px 0}.capture-panel{padding:24px 20px}.result{padding-top:28px;padding-bottom:32px}.result-top{align-items:flex-start}.result-top p{font-size:10px;text-align:right}.score-overview{grid-template-columns:1fr}.score-block{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;padding:24px}.score-block>.eyebrow{grid-column:1}.score-block>.score-main{grid-column:2;grid-row:1/3}.score-value{font-size:60px}.score-label{grid-column:1;max-width:180px}.score-scale{margin-top:9px}.result-summary{padding:24px}.result-summary h1{font-size:30px}.dimension-results{grid-template-columns:1fr 1fr}.dimension-result{padding:20px}.dimension-result:nth-child(3){border-left:0}.dimension-result:nth-child(n+3){border-top:1px solid var(--soft)}.section-heading{align-items:flex-start}.section-heading h2{font-size:22px}.section-heading p{text-align:right;max-width:130px}.analysis-grid{grid-template-columns:1fr;gap:12px}.result-cta{padding:24px;gap:24px}.result-cta .button{font-size:13px;padding:12px 14px}.result-end{flex-direction:column;align-items:flex-start;gap:12px}.result-top .eyebrow::before{display:none}}
+@media(max-width:380px){.wrap{padding-left:16px;padding-right:16px}.hero h1{font-size:36px}.preview{font-size:8px}.header-actions{gap:8px}.header-actions .text-button{font-size:10px}.question-card{padding:20px 16px}.question-controls .button{font-size:12px;padding:12px}.dimension-result{padding:16px}.result-cta{padding:20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{.header-actions,.footer,.result-cta,.result-end,.text-button{display:none!important}body{background:white}.result{max-width:none}.score-block{background:#E8EDF2;color:#151A1E}.score-block .eyebrow,.score-value small{color:#495560}.screen{animation:none}.analysis-grid,.dimension-results,.recommendations li{break-inside:avoid}}
+</style>
+</head>
+<body data-project-id="leviatan_lead_magnet_test_001" data-lead-magnet-id="lmq_leviatan_lead_magnet_test_001_h61ddi" data-theme-id="lmq_leviatan_lead_magnet_test_001_h61ddi_theme_v1" data-render-version="2">
+<header class="header">
+  <div class="wrap header-inner">
+    <div class="brand-block">
+      <div class="wordmark">LEVIATAN</div>
+      <div class="header-label">IA générative<br>Diagnostic d’industrialisation</div>
+    </div>
+    <div class="header-actions">
+      <span class="preview">Prévisualisation interactive</span>
+      <button class="text-button" id="header-restart" hidden type="button">Recommencer</button>
+    </div>
+  </div>
+</header>
+<main class="main" id="main">
+<section id="landing" class="screen wrap landing" aria-labelledby="landing-title">
+  <div class="document-line">
+    <p class="eyebrow">Revue de préparation à la production</p>
+    <span class="document-note">Diagnostic / IA générative</span>
+  </div>
+  <div class="hero">
+    <div>
+      <h1 id="landing-title" tabindex="-1">Votre projet d’IA générative est-il prêt <em>pour la production&nbsp;?</em></h1>
+      <p class="hero-sub">Évaluez la maturité de votre cadrage, de vos données, de votre architecture et de vos dispositifs de maîtrise opérationnelle.</p>
+      <div class="hero-action">
+        <button id="start" class="button" type="button">Démarrer le diagnostic <span class="arrow" aria-hidden="true">↗</span></button>
+        <p class="time-note"><strong>Environ 7 minutes</strong><br>8 questions · 4 dimensions</p>
+      </div>
+    </div>
+    <div class="review-visual" aria-hidden="true">
+      <div class="visual-top"><span>GRILLE DE MATURITÉ</span><span>01 — 04</span></div>
+      <div class="matrix">
+        <div class="quadrant"><span class="quad-num">01</span><span class="glyph frame"></span><span class="quad-name">Cadrage<br>et valeur</span></div>
+        <div class="quadrant"><span class="quad-num">02</span><span class="glyph stack"></span><span class="quad-name">Données<br>et architecture</span></div>
+        <div class="quadrant"><span class="quad-num">03</span><span class="glyph shield"></span><span class="quad-name">Fiabilité<br>et sécurité</span></div>
+        <div class="quadrant"><span class="quad-num">04</span><span class="glyph connect"></span><span class="quad-name">Intégration<br>et exploitation</span></div>
+      </div>
+      <div class="visual-bottom"><span>Du prototype à l’industrialisation</span><span>4 axes de lecture</span></div>
+    </div>
+  </div>
+  <div class="benefits">
+    <article class="benefit"><span class="index">01</span><div><h2>Situer votre maturité</h2><p>Situer le niveau de maturité actuel de votre projet d’IA générative.</p></div></article>
+    <article class="benefit"><span class="index">02</span><div><h2>Identifier les écarts</h2><p>Repérer les principaux écarts liés aux données, à l’architecture, à la fiabilité, à la sécurité et à l’intégration.</p></div></article>
+    <article class="benefit"><span class="index">03</span><div><h2>Prioriser les chantiers</h2><p>Définir les chantiers prioritaires à traiter avant une industrialisation.</p></div></article>
+  </div>
+  <div class="intro-note"><h2>Un point de départ, pas un audit.</h2><p>Ce diagnostic fournit une lecture structurée des conditions nécessaires au passage d’un prototype d’IA générative vers une solution fiable et intégrée. Il ne remplace pas un audit professionnel complet, mais permet d’identifier les écarts prioritaires à approfondir.</p></div>
+</section>
+
+<section id="questionnaire" class="screen wrap flow" aria-labelledby="question-title" hidden>
+  <div class="progress-meta"><strong id="progress-label">Question 1 sur 8</strong><span id="progress-detail">0 réponse sur 8</span></div>
+  <div id="progress" class="segments" role="progressbar" aria-label="Questions renseignées" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0"></div>
+  <div class="question-layout">
+    <aside class="sidebar" aria-label="Dimensions du diagnostic">
+      <p class="sidebar-title">Périmètre de la revue</p>
+      <ol class="dimension-nav" id="dimension-nav"></ol>
+      <p class="sidebar-note">Répondez selon l’état actuel du projet, plutôt que selon les dispositifs envisagés.</p>
+    </aside>
+    <div>
+      <form id="question-form" class="question-card" novalidate>
+        <p class="eyebrow" id="question-dimension"></p>
+        <h1 class="question-heading" id="question-title" tabindex="-1"></h1>
+        <p class="question-help" id="question-help"></p>
+        <fieldset aria-labelledby="question-title" aria-describedby="question-help question-error">
+          <legend class="sr-only">Votre réponse</legend>
+          <div class="options" id="options"></div>
+        </fieldset>
+        <p id="question-error" class="error" role="alert" hidden>Sélectionnez une réponse pour continuer.</p>
+        <div class="question-controls">
+          <button id="previous" class="button secondary" type="button"><span aria-hidden="true">←</span> Précédent</button>
+          <button id="next" class="button" type="submit"><span id="next-label">Continuer</span><span class="arrow" aria-hidden="true">→</span></button>
+        </div>
+      </form>
+      <p class="micro-note">Vous pouvez revenir sur vos réponses avant de consulter le résultat.</p>
+    </div>
+  </div>
+</section>
+
+<section id="capture" class="screen wrap capture" aria-labelledby="capture-title" hidden>
+  <div class="complete-line"><span class="complete-label"><span class="check" aria-hidden="true">✓</span> 8 questions renseignées</span><span>Dernière étape</span></div>
+  <div class="capture-grid">
+    <div>
+      <p class="eyebrow">Votre restitution</p>
+      <h1 id="capture-title" tabindex="-1">Accédez à votre profil de maturité détaillé</h1>
+      <p class="capture-description">Renseignez les informations ci-dessous pour afficher votre résultat complet et vos chantiers prioritaires. Dans cette prévisualisation, aucune réponse ni coordonnée n’est collectée ou stockée.</p>
+      <div class="report-contents">
+        <div class="report-row"><span class="index">01</span><span>Votre niveau global de maturité</span></div>
+        <div class="report-row"><span class="index">02</span><span>Une lecture des quatre dimensions</span></div>
+        <div class="report-row"><span class="index">03</span><span>Vos points d’appui et chantiers prioritaires</span></div>
+      </div>
+    </div>
+    <div>
+      <form id="lead-form" class="capture-panel" autocomplete="off">
+        <p class="panel-kicker">Les champs marqués d’un * sont obligatoires.</p>
+        <div class="field"><label for="first-name">Prénom *</label><input id="first-name" name="first_name" type="text" required maxlength="120" autocomplete="off"></div>
+        <div class="field"><label for="email">Adresse e-mail professionnelle *</label><input id="email" name="email" type="email" required maxlength="254" autocomplete="off" inputmode="email" autocapitalize="none" spellcheck="false"></div>
+        <div class="field"><label for="company">Entreprise <span class="optional">— facultatif</span></label><input id="company" name="company" type="text" maxlength="200" autocomplete="off"></div>
+        <button class="button full" type="submit">Afficher mon résultat <span class="arrow" aria-hidden="true">→</span></button>
+        <p class="consent">Cette prévisualisation ne transmet et ne stocke aucune réponse ni coordonnée.</p>
+      </form>
+      <button id="capture-back" class="text-button capture-back" type="button">← Revenir à mes réponses</button>
+    </div>
+  </div>
+</section>
+
+<section id="result" class="screen wrap result" aria-labelledby="result-title" hidden>
+  <div class="result-top"><span class="eyebrow">Restitution du diagnostic</span><p>IA générative<br>Revue de maturité à l’industrialisation</p></div>
+  <div class="score-overview">
+    <div class="score-block">
+      <p class="eyebrow">Maturité globale</p>
+      <div class="score-main"><div class="score-value"><span id="overall-score"></span><small>/ 100</small></div><div class="score-scale" id="score-scale" aria-hidden="true"></div></div>
+      <p id="score-label" class="score-label"></p>
+    </div>
+    <div class="result-summary"><span class="profile-label" id="profile-label"></span><h1 id="result-title" tabindex="-1"></h1><p id="result-summary"></p></div>
+  </div>
+  <div class="section-heading"><h2>Vos quatre dimensions</h2><p>Poids identique dans le score global</p></div>
+  <div id="dimension-results" class="dimension-results"></div>
+  <div class="analysis-grid">
+    <section class="analysis-column" aria-labelledby="strengths-title"><h2 id="strengths-title"><span class="analysis-dot" aria-hidden="true"></span>Points d’appui</h2><ul id="strengths"></ul></section>
+    <section class="analysis-column" aria-labelledby="weaknesses-title"><h2 id="weaknesses-title"><span class="analysis-dot warning" aria-hidden="true"></span>Points de vigilance</h2><ul id="weaknesses"></ul></section>
+  </div>
+  <div class="section-heading"><h2>Vos chantiers prioritaires</h2><p>Une trajectoire à approfondir</p></div>
+  <p id="priority-note" class="priority-note"></p>
+  <ol id="recommendations" class="recommendations"></ol>
+  <section class="result-cta" aria-labelledby="cta-title">
+    <div><h2 id="cta-title">Échanger avec un expert Leviatan</h2><p>Analysez les écarts prioritaires de votre projet et cadrez une trajectoire d’industrialisation adaptée à vos données, à votre architecture et à votre système d’information.</p></div>
+    <div><button id="expert-cta" class="button" type="button">Échanger avec un expert Leviatan <span aria-hidden="true">↗</span></button><div class="cta-note">Prise de contact non activée dans cette prévisualisation.</div></div>
+  </section>
+  <p class="result-disclaimer">Ce diagnostic repose sur vos réponses déclaratives et ne remplace pas un audit professionnel complet. Le score indique un niveau de maturité, pas une autorisation de mise en production.</p>
+  <div class="result-end"><button id="result-restart" class="text-button" type="button">↻ Recommencer le diagnostic</button><p>Résultat calculé dans cette page · aucune donnée transmise</p></div>
+</section>
+</main>
+<footer class="footer">
+  <div class="wrap footer-inner"><span class="footer-brand">LEVIATAN / IA GÉNÉRATIVE</span><p class="privacy"><svg width="14" height="16" viewBox="0 0 14 16" fill="none" stroke="currentColor" aria-hidden="true"><rect x="2" y="7" width="10" height="8" rx="1"/><path d="M4 7V4a3 3 0 0 1 6 0v3M7 10v2"/></svg>Prévisualisation : aucune donnée saisie n’est stockée ni transmise.</p></div>
+</footer>
+<dialog id="restart-dialog" aria-labelledby="restart-title" aria-describedby="restart-description">
+  <h2 id="restart-title">Recommencer le diagnostic ?</h2>
+  <p id="restart-description">Vos réponses actuelles seront effacées. Vous pourrez commencer une nouvelle évaluation.</p>
+  <div class="dialog-actions"><button id="cancel-restart" class="button secondary" type="button" autofocus>Annuler</button><button id="confirm-restart" class="button" type="button">Recommencer</button></div>
+</dialog>
+<dialog id="expert-dialog" aria-labelledby="expert-title" aria-describedby="expert-description">
+  <p class="eyebrow" style="margin-bottom:16px">Prévisualisation interactive</p>
+  <h2 id="expert-title">Échanger avec un expert Leviatan</h2>
+  <p id="expert-description">La prise de contact n’est pas activée dans cette prévisualisation : aucun lien de destination n’a été fourni. Aucune demande ni coordonnée n’a été transmise.</p>
+  <div class="dialog-actions"><button id="close-expert" class="button" type="button" autofocus>Revenir à mon résultat</button></div>
+</dialog>
+<script>
+"use strict";
+const dimensions = [
+ {id:"cadrage_valeur",name:"Cadrage et valeur",description:"Clarté du cas d’usage, des objectifs, des responsabilités et des indicateurs de qualité ou de rentabilité.",weight:1},
+ {id:"donnees_architecture",name:"Données et architecture",description:"Maîtrise des sources de données et adéquation de l’architecture technique au cas d’usage.",weight:1},
+ {id:"fiabilite_securite",name:"Fiabilité et sécurité",description:"Capacité à évaluer, contrôler et sécuriser les comportements du système d’IA générative.",weight:1},
+ {id:"integration_exploitation",name:"Intégration et exploitation",description:"Préparation de l’intégration au système d’information, du suivi en production et de l’amélioration continue.",weight:1}
+];
+const questionData = [
+ {id:"q1",dimension:0,text:"À quel stade se situe le cadrage de votre cas d’usage d’IA générative ?",options:[
+ "Le besoin reste exploratoire et plusieurs cas d’usage sont encore envisagés.",
+ "Un cas d’usage est retenu, mais son périmètre et ses contraintes restent partiellement définis.",
+ "Le cas d’usage, les utilisateurs et les principaux processus concernés sont documentés.",
+ "Le périmètre, les responsabilités, les contraintes et les critères de décision sont formalisés et partagés."
+ ]},
+ {id:"q2",dimension:0,text:"Comment mesurez-vous actuellement la qualité et la valeur attendue du système ?",options:[
+ "Aucun indicateur précis n’est encore défini.",
+ "Des objectifs généraux existent, sans seuils mesurables ni méthode de suivi stable.",
+ "Des indicateurs de qualité ou d’usage sont définis et testés sur le prototype.",
+ "Des indicateurs de qualité, d’usage, de coût et de valeur sont assortis de seuils de décision."
+ ]},
+ {id:"q3",dimension:1,text:"Quel niveau de maîtrise avez-vous sur les données métier nécessaires au projet ?",options:[
+ "Les sources utiles ne sont pas encore recensées ou leur accessibilité reste inconnue.",
+ "Les principales sources sont identifiées, mais leur qualité, leurs droits d’accès ou leur actualisation restent incertains.",
+ "Les sources sont accessibles et leur qualité a été vérifiée sur un périmètre représentatif.",
+ "Les sources, droits, règles de qualité, mises à jour et responsabilités sont documentés et suivis."
+ ]},
+ {id:"q4",dimension:1,text:"Comment l’architecture cible a-t-elle été choisie pour le cas d’usage ?",options:[
+ "Aucune architecture cible n’est encore définie.",
+ "Une approche RAG, agent ou intégration LLM est envisagée principalement à partir d’un prototype.",
+ "Plusieurs options ont été comparées selon les données, les tâches, la latence, les coûts et les contraintes d’intégration.",
+ "L’architecture cible est documentée, testée sur des cas représentatifs et assortie de choix techniques justifiés."
+ ]},
+ {id:"q5",dimension:2,text:"Comment évaluez-vous la fiabilité des réponses ou actions produites par le système ?",options:[
+ "L’évaluation repose surtout sur des essais ponctuels réalisés par l’équipe projet.",
+ "Un jeu de tests existe, mais il couvre un nombre limité de scénarios et de cas d’échec.",
+ "Des jeux d’évaluation représentatifs et des critères mesurables sont utilisés à chaque évolution importante.",
+ "L’évaluation couvre qualité, robustesse, cas limites et régressions, avec des seuils de validation explicites."
+ ]},
+ {id:"q6",dimension:2,text:"Quel dispositif encadre la sécurité, la confidentialité et les actions autorisées ?",options:[
+ "Ces sujets n’ont pas encore fait l’objet d’une analyse structurée.",
+ "Des règles générales existent, mais leur application au système d’IA reste partielle.",
+ "Les accès, les données sensibles, les journaux et les actions critiques font l’objet de contrôles définis.",
+ "Les risques sont documentés et couverts par des contrôles testés, une traçabilité et des procédures de traitement."
+ ]},
+ {id:"q7",dimension:3,text:"Où en est l’intégration du système d’IA dans votre système d’information et vos processus métier ?",options:[
+ "Le prototype fonctionne de manière isolée, sans intégration définie.",
+ "Les principaux systèmes à connecter sont identifiés, mais les interfaces et responsabilités restent à préciser.",
+ "Les interfaces, flux, identités et parcours métier sont conçus et partiellement testés.",
+ "L’intégration est testée de bout en bout avec des responsabilités, procédures et scénarios de repli définis."
+ ]},
+ {id:"q8",dimension:3,text:"Comment préparez-vous l’exploitation et le suivi du système en production ?",options:[
+ "Les modalités d’exploitation ne sont pas encore définies.",
+ "Des besoins de supervision sont identifiés, sans dispositif opérationnel complet.",
+ "Les métriques, journaux, alertes, coûts et responsabilités d’exploitation sont définis.",
+ "Le suivi continu, la gestion des incidents, les régressions et l’amélioration du système sont organisés et testés."
+ ]}
+];
+const questions = questionData.map(q => ({
+ id:q.id,type:"single_choice",required:true,text:q.text,primary_dimension_id:dimensions[q.dimension].id,
+ options:q.options.map((label,index)=>({id:q.id+"_"+String.fromCharCode(97+index),label,scores:[{dimension_id:dimensions[q.dimension].id,points:index}]}))
+}));
+const profiles = [
+ {
+ id:"exploration_a_structurer",label:"Exploration à structurer",min_score:0,max_score:34,
+ headline:"Les fondations de l’industrialisation restent à structurer",
+ summary:"Votre projet se situe encore dans une phase d’exploration ou de prototype initial. Avant d’envisager la production, il convient de stabiliser le cas d’usage, les critères de valeur, les données mobilisées et les contraintes de sécurité et d’intégration.",
+ strengths:["Un cas d’usage ou une opportunité d’IA générative est déjà identifié.","Le diagnostic fournit une première cartographie des conditions à réunir."],
+ weaknesses:["Plusieurs décisions structurantes ne sont pas encore formalisées.","Les conditions de qualité, de sécurité et d’exploitation sont insuffisamment vérifiables."],
+ recommendations:[
+ "Formaliser un cas d’usage prioritaire, ses utilisateurs, son périmètre et ses critères de succès.",
+ "Recenser les données nécessaires, leurs droits d’accès, leur qualité et leur fréquence de mise à jour.",
+ "Comparer les options RAG, agent IA ou intégration LLM à partir des contraintes réelles du projet.",
+ "Définir un premier protocole d’évaluation et une analyse des risques avant d’étendre le prototype."
+ ]
+ },
+ {
+ id:"prototype_a_consolider",label:"Prototype à consolider",min_score:35,max_score:59,
+ headline:"Votre prototype doit être consolidé avant le passage en production",
+ summary:"Les principaux composants du projet existent, mais leur niveau de formalisation ou de validation reste inégal. L’enjeu est désormais de transformer les choix implicites du prototype en exigences, tests et responsabilités opérationnelles.",
+ strengths:["Le projet dispose de premiers éléments concrets sur le cas d’usage, les données ou l’architecture.","Des apprentissages techniques peuvent déjà guider les prochaines décisions."],
+ weaknesses:["Les critères de validation ne couvrent probablement pas encore tous les scénarios représentatifs.","L’intégration, la sécurité ou l’exploitation peuvent encore dépendre de traitements manuels."],
+ recommendations:[
+ "Documenter l’architecture cible et justifier ses choix selon la qualité, la latence, les coûts et les contraintes métier.",
+ "Construire un jeu d’évaluation représentatif incluant les erreurs, cas limites et régressions.",
+ "Formaliser les contrôles d’accès, la protection des données sensibles et la traçabilité des actions.",
+ "Définir les interfaces avec le système d’information ainsi que les responsabilités de mise en production."
+ ]
+ },
+ {
+ id:"preparation_industrialisation",label:"Préparation à l’industrialisation",min_score:60,max_score:79,
+ headline:"Votre projet présente une base solide, avec des écarts ciblés à traiter",
+ summary:"Votre projet réunit une part importante des conditions nécessaires à l’industrialisation. Le passage en production dépend principalement de la fermeture de quelques écarts sur les tests, la sécurité, l’intégration ou le pilotage opérationnel.",
+ strengths:["Le cas d’usage et l’architecture sont suffisamment avancés pour préparer une trajectoire de production.","Plusieurs mécanismes de maîtrise des données, de la qualité ou de l’intégration sont déjà définis."],
+ weaknesses:["Certains contrôles peuvent ne pas être testés de bout en bout.","Le suivi des coûts, des incidents ou des performances peut encore manquer de seuils de décision."],
+ recommendations:[
+ "Prioriser les dimensions ayant obtenu les scores les plus faibles et leur associer des critères de sortie mesurables.",
+ "Valider l’architecture sur des volumes, données et scénarios proches des conditions réelles.",
+ "Tester les contrôles de sécurité, les scénarios de repli et les procédures de gestion des incidents.",
+ "Préparer une mise en production progressive avec supervision de la qualité, des usages et des coûts."
+ ]
+ },
+ {
+ id:"maturite_avancee",label:"Maturité avancée",min_score:80,max_score:100,
+ headline:"Votre projet dispose de fondations avancées pour l’industrialisation",
+ summary:"Votre organisation a structuré la plupart des dimensions nécessaires à un système d’IA générative exploitable en production. L’enjeu principal consiste à vérifier la cohérence de bout en bout, à sécuriser le déploiement et à organiser l’amélioration continue.",
+ strengths:["Les décisions de cadrage, de données et d’architecture sont largement formalisées.","Les dispositifs de fiabilité, de sécurité, d’intégration et de suivi sont proches d’un fonctionnement industriel."],
+ weaknesses:["Des risques résiduels peuvent subsister dans les interactions entre composants et processus.","Les performances, les coûts et la qualité devront être confirmés dans la durée."],
+ recommendations:[
+ "Réaliser une revue de préparation couvrant architecture, données, sécurité, tests, intégration et exploitation.",
+ "Définir des seuils d’alerte et des procédures explicites pour les incidents, dérives de qualité et dépassements de coûts.",
+ "Organiser un déploiement progressif avec critères d’acceptation et mécanismes de retour arrière.",
+ "Mettre en place une boucle d’amélioration continue fondée sur les métriques de qualité, d’usage et de rentabilité."
+ ]
+ }
+];
+const tieBreakers=["fiabilite_securite","donnees_architecture","integration_exploitation","cadrage_valeur"];
+const $=id=>document.getElementById(id);
+function node(tag,className,text){
+ const n=document.createElement(tag);
+ if(className)n.className=className;
+ if(text!==undefined)n.textContent=text;
+ return n;
+}
+let answers=Object.create(null);
+let current=0;
+let activeScreen="landing";
+const screens=["landing","questionnaire","capture","result"];
+
+function showScreen(id,focusId){
+ screens.forEach(screen=>$(screen).hidden=screen!==id);
+ activeScreen=id;
+ $("header-restart").hidden=id==="landing";
+ window.scrollTo({top:0,behavior:"instant"});
+ if(focusId)$(focusId).focus({preventScroll:true});
+}
+function answeredCount(){return questions.filter(q=>answers[q.id]&&answers[q.id].length).length}
+function updateProgress(){
+ const count=answeredCount();
+ $("progress-label").textContent="Question "+(current+1)+" sur "+questions.length;
+ $("progress-detail").textContent=count+" réponse"+(count>1?"s":"")+" sur "+questions.length;
+ $("progress").setAttribute("aria-valuenow",String(count));
+ $("progress").setAttribute("aria-valuetext",count+" questions renseignées sur "+questions.length);
+ $("progress").replaceChildren();
+ questions.forEach((q,i)=>{
+  const segment=node("span","segment"+(answers[q.id]?.length?" done":"")+(i===current?" current":""));
+  segment.setAttribute("aria-hidden","true");
+  $("progress").append(segment);
+ });
+}
+function updateSidebar(){
+ $("dimension-nav").replaceChildren();
+ dimensions.forEach((d,i)=>{
+  const related=questions.filter(q=>q.primary_dimension_id===d.id);
+  const complete=related.every(q=>answers[q.id]?.length);
+  const active=questions[current].primary_dimension_id===d.id;
+  const item=node("li",(active?"active ":"")+(complete?"complete":""));
+  if(active)item.setAttribute("aria-current","step");
+  const number=node("span","dimension-number",complete?"✓":String(i+1).padStart(2,"0"));
+  number.setAttribute("aria-hidden","true");
+  item.append(number,node("span","",d.name));
+  if(complete)item.append(node("span","sr-only"," — dimension renseignée"));
+  $("dimension-nav").append(item);
+ });
+}
+function renderQuestion(){
+ const q=questions[current];
+ const dimension=dimensions.find(d=>d.id===q.primary_dimension_id);
+ $("question-dimension").textContent=String(dimensions.indexOf(dimension)+1).padStart(2,"0")+" / "+dimension.name;
+ $("question-title").textContent=q.text;
+ $("question-help").textContent=(q.type==="multiple_choice"?"Plusieurs réponses possibles.":"Une seule réponse possible.")+(q.required?" Réponse obligatoire.":"");
+ $("question-error").hidden=true;
+ $("options").replaceChildren();
+ q.options.forEach((option,i)=>{
+  const selected=(answers[q.id]||[]).includes(option.id);
+  const row=node("label","option"+(selected?" selected":""));
+  const input=node("input");
+  input.type=q.type==="multiple_choice"?"checkbox":"radio";
+  input.name=q.id; input.value=option.id; input.checked=selected;
+  if(q.required&&q.type==="single_choice")input.required=true;
+  const text=node("span","",option.label);
+  const key=node("span","option-key",String.fromCharCode(65+i));
+  key.setAttribute("aria-hidden","true");
+  row.append(input,text,key);
+  input.addEventListener("change",()=>{
+   if(q.type==="multiple_choice"){
+    const next=new Set(answers[q.id]||[]);
+    if(input.checked)next.add(option.id);else next.delete(option.id);
+    answers[q.id]=Array.from(next);
+   }else answers[q.id]=[option.id];
+   $("options").querySelectorAll("label").forEach(label=>label.classList.toggle("selected",label.querySelector("input").checked));
+   $("question-error").hidden=true;
+   $("options").querySelectorAll("input").forEach(el=>el.removeAttribute("aria-invalid"));
+   updateProgress();updateSidebar();
+  });
+  $("options").append(row);
+ });
+ $("next-label").textContent=current===questions.length-1?"Terminer":"Continuer";
+ $("previous").setAttribute("aria-label",current===0?"Revenir à l’introduction":"Question précédente");
+ updateProgress();updateSidebar();
+ showScreen("questionnaire","question-title");
+}
+$("start").addEventListener("click",()=>renderQuestion());
+$("question-form").addEventListener("submit",event=>{
+ event.preventDefault();
+ const q=questions[current];
+ if(q.required&&!(answers[q.id]?.length)){
+  $("question-error").hidden=false;
+  $("options").querySelectorAll("input").forEach(input=>input.setAttribute("aria-invalid","true"));
+  $("options").querySelector("input").focus();
+  return;
+ }
+ if(current<questions.length-1){current++;renderQuestion()}
+ else showScreen("capture","capture-title");
+});
+$("previous").addEventListener("click",()=>{
+ if(current>0){current--;renderQuestion()}
+ else showScreen("landing","landing-title");
+});
+$("capture-back").addEventListener("click",()=>{current=questions.length-1;renderQuestion()});
+
+function scoreAnswers(){
+ const values=dimensions.map(d=>{
+  let points=0,available=0;
+  questions.forEach(q=>{
+   const optionPoints=q.options.map(o=>o.scores.filter(s=>s.dimension_id===d.id).reduce((sum,s)=>sum+s.points,0));
+   available+=q.type==="multiple_choice"
+    ?optionPoints.reduce((sum,p)=>sum+Math.max(0,p),0)
+    :Math.max(0,...optionPoints);
+   q.options.forEach((o,i)=>{if((answers[q.id]||[]).includes(o.id))points+=optionPoints[i]});
+  });
+  return {...d,points,available,percentage:available?Math.max(0,Math.min(100,100*points/available)):0};
+ });
+ const applicable=values.filter(d=>d.available>0);
+ const totalWeight=applicable.reduce((sum,d)=>sum+d.weight,0);
+ const overall=totalWeight?applicable.reduce((sum,d)=>sum+d.percentage*d.weight,0)/totalWeight:0;
+ return {values,overall,rounded:Math.round(overall)};
+}
+function fillList(id,items){
+ $(id).replaceChildren();
+ items.forEach(text=>$(id).append(node("li","",text)));
+}
+function renderResults(){
+ const computed=scoreAnswers();
+ const profile=profiles.find(p=>computed.rounded>=p.min_score&&computed.rounded<=p.max_score);
+ $("overall-score").textContent=computed.rounded;
+ $("score-label").textContent=profile.label;
+ $("profile-label").textContent=profile.label;
+ $("result-title").textContent=profile.headline;
+ $("result-summary").textContent=profile.summary;
+ $("score-scale").replaceChildren();
+ const level=profiles.indexOf(profile)+1;
+ for(let i=0;i<4;i++)$("score-scale").append(node("span",i<level?"lit":""));
+ $("dimension-results").replaceChildren();
+ computed.values.forEach(d=>{
+  const card=node("section","dimension-result");
+  const heading=node("h3","",d.name);
+  const value=node("div","dimension-value",String(Math.round(d.percentage)));
+  value.append(node("small",""," / 100"));
+  const bar=node("div","meter");
+  bar.setAttribute("aria-hidden","true");
+  const fill=node("span");fill.style.width=d.percentage+"%";bar.append(fill);
+  card.append(heading,value,bar,node("p","",d.description));
+  $("dimension-results").append(card);
+ });
+ fillList("strengths",profile.strengths);
+ fillList("weaknesses",profile.weaknesses);
+ $("recommendations").replaceChildren();
+ profile.recommendations.forEach((text,i)=>{
+  const item=node("li");
+  const number=node("span","index",String(i+1).padStart(2,"0"));
+  number.setAttribute("aria-hidden","true");
+  item.append(number,node("span","",text));
+  $("recommendations").append(item);
+ });
+ const ordered=[...computed.values].sort((a,b)=>a.percentage-b.percentage||tieBreakers.indexOf(a.id)-tieBreakers.indexOf(b.id));
+ const uniform=ordered.every(d=>Math.abs(d.percentage-ordered[0].percentage)<.00001);
+ if(uniform){
+  $("priority-note").textContent="Vos quatre dimensions présentent le même niveau de maturité. À niveau égal, examinez d’abord la fiabilité et la sécurité, puis les données et l’architecture.";
+ }else{
+  const weakest=ordered[0];
+  $("priority-note").textContent="Premier axe à approfondir : "+weakest.name+" ("+Math.round(weakest.percentage)+"/100). Ce niveau est le plus faible de votre diagnostic"+(ordered[1].percentage===weakest.percentage?", à égalité avec une autre dimension. La fiabilité et la sécurité sont prioritaires en cas d’égalité.":".");
+ }
+ showScreen("result","result-title");
+}
+$("first-name").addEventListener("input",()=>{$("first-name").setCustomValidity("")});
+$("lead-form").addEventListener("submit",event=>{
+ event.preventDefault();
+ const first=$("first-name");
+ first.setCustomValidity(first.value.trim()?"":"Veuillez renseigner votre prénom.");
+ if(!$("lead-form").reportValidity())return;
+ const missing=questions.findIndex(q=>q.required&&!answers[q.id]?.length);
+ if(missing!==-1){current=missing;renderQuestion();return}
+ $("lead-form").reset();
+ renderResults();
+});
+function askRestart(){$("restart-dialog").showModal()}
+$("header-restart").addEventListener("click",askRestart);
+$("result-restart").addEventListener("click",askRestart);
+$("cancel-restart").addEventListener("click",()=>$("restart-dialog").close());
+$("confirm-restart").addEventListener("click",()=>{
+ $("restart-dialog").close();
+ answers=Object.create(null);current=0;
+ $("lead-form").reset();$("first-name").setCustomValidity("");
+ $("options").replaceChildren();
+ $("dimension-results").replaceChildren();
+ $("strengths").replaceChildren();$("weaknesses").replaceChildren();$("recommendations").replaceChildren();
+ ["overall-score","score-label","profile-label","result-title","result-summary","priority-note"].forEach(id=>$(id).textContent="");
+ showScreen("landing","landing-title");
+});
+$("expert-cta").addEventListener("click",()=>$("expert-dialog").showModal());
+$("close-expert").addEventListener("click",()=>$("expert-dialog").close());
+document.querySelectorAll("form").forEach(form=>form.addEventListener("submit",event=>event.preventDefault()));
+</script>
+</body>
+</html>
